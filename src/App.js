@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 
-function App() {
+import { Page, Menu, MenuLink } from './DRKStyle';
+import HomePage from './HomePage';
+import AppPage from './AppPage';
+import MapPage from './MapPage';
+
+export default function App () {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Page>
+        <Menu>
+          <MenuLink to="/">Übersicht</MenuLink>
+          <MenuLink to="/app">Alarm-App</MenuLink>
+          <MenuLink to="/map">Karte</MenuLink>
+        </Menu>
+        <Switch>
+          <Route exact path="/">
+            <HomePage />
+          </Route>
+          <Route path="/app">
+            <AppPage />
+          </Route>
+          <Route path="/map">
+            <MapPage />
+          </Route>
+        </Switch>
+      </Page>
+    </Router>
   );
 }
-
-export default App;
