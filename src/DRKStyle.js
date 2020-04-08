@@ -107,3 +107,11 @@ export const Subheader = styled.h3`
 export const Link = styled(RouterLink)`
   color: ${colors.midblue};
 `
+
+export const Button = styled.button`
+  background: ${colors.midblue};
+  color: white;
+  border: 0;
+  padding: 5px 20px;
+  margin: 5px;
+`

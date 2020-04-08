@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import styled from 'styled-components'
-import { colors, Content, Title, Link } from './DRKStyle';
+import { colors, Content, Title, Link, Button } from '../DRKStyle';
+
+import useGrid from './useGrid';
 
 export default function MapPage() {
   const [title, setTitle] = useState('Großveranstaltung 2020');
-  const [orientation, setOrientation] = useState('landscape');
-  const switchOrientation = () => setOrientation(old => old === 'landscape' ? 'portrait' : 'landscape')
+  const [grid, setGrid] = useGrid();
+  const switchOrientation = () => setGrid(grid.switchOrientation())
   const date = new Date().toLocaleDateString('de-DE');
 
   return (
@@ -13,20 +15,22 @@ export default function MapPage() {
       <PrintHidden>
         <Title>Lageplan</Title>
         <p>Erstell dir einfach deinen eigenen Lageplan.</p>
-        <button onClick={switchOrientation}>Orientation</button>
-        <button onClick={() => window.print()}>Drucken</button>
+        <Button onClick={switchOrientation}>Format</Button>
+        <Button onClick={() => setGrid(grid.increase())}>Mehr</Button>
+        <Button onClick={() => setGrid(grid.decrease())}>Weniger</Button>
         <input type="text" value={title} onChange={event => setTitle(event.target.value)} />
+        <Button onClick={() => window.print()}>Drucken</Button>
       </PrintHidden>
-      <Sheet orientation={orientation}>
+      <Sheet orientation={grid.orientation}>
         <SheetHeader>
           <Sender>DRK Ortsverein<br/>Barmbek-Uhlenhorst</Sender>
-          <PrintTitle orientation={orientation} show={orientation === 'landscape'}>{title}</PrintTitle>
+      <PrintTitle orientation={grid.orientation} show={grid.isLandscape()}>{title}</PrintTitle>
           <Logo/>
         </SheetHeader>
         <SheetContent>
-          <PrintTitle orientation={orientation} show={orientation === 'portrait'}>{title}</PrintTitle>
+      <PrintTitle orientation={grid.orientation} show={grid.isPortrait()}>{title}</PrintTitle>
           <Stacked>
-            <MapGrid orientation={orientation}/>
+            <MapGrid columns={grid.columnNames()} rows={grid.rowNames()}/>
             <MapElement/>
           </Stacked>
         </SheetContent>
@@ -49,11 +53,18 @@ const Stacked = styled.div`
   }
 `
 
-const MapGrid = () => {
+const MapGrid = (props) => {
+  const { columns, rows } = props
+
   return (
       <MapGridTable>
-      <tr><td>Hello</td></tr>
-      <tr><td>Hello</td></tr>
+      <thead>
+        <th></th>
+        {columns.map(colName => <th>{colName}</th>)}
+      </thead>
+      <tbody>
+        {rows.map(rowName => <tr><th>{rowName}</th>{columns.map(colName => <td></td>)}</tr>)}
+      </tbody>
       </MapGridTable>
   )
 }
@@ -68,6 +79,9 @@ const MapGridTable = styled.table`
   border: 1px solid black;
   & td {
     border: 1px solid black;
+  }
+  & tbody th, & thead th:nth-child(1) {
+    width: 2em;
   }
 `
 

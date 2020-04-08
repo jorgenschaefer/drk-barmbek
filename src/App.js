@@ -8,7 +8,7 @@ import {
 import { Page, Menu, MenuLink } from './DRKStyle';
 import HomePage from './HomePage';
 import AppPage from './AppPage';
-import MapPage from './MapPage';
+import MapPage from './map_page/MapPage';
 
 export default function App () {
   return (
