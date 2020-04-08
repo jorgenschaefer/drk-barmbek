@@ -2,12 +2,19 @@ import React, { useState, useLayoutEffect, useRef } from "react";
 import styled from 'styled-components'
 import { colors, Content, Title, Link, Button } from '../DRKStyle';
 
+const TABLE_HEADER_SIZE = '6mm'
 const PORTRAIT = 'portrait'
 const LANDSCAPE = 'landscape'
 const PORTRAIT_WIDTH = '210mm'
 const PORTRAIT_HEIGHT = '297mm'
 const LANDSCAPE_WIDTH = '297mm'
 const LANDSCAPE_HEIGHT = '210mm'
+const ALPHABET = [
+  'Anton', 'Berta', 'Cäsar', 'Dora', 'Emil', 'Friedrich', 'Gustav', 'Heinrich',
+  'Ida', 'Julius', 'Kaufmann', 'Ludwig', 'Martha', 'Nordpol', 'Otto', 'Paula',
+  'Quelle', 'Richard', 'Samuel', 'Theodor', 'Ulrich', 'Viktor', 'Wilhelm',
+  'Xanthippe', 'Ypsilon', 'Zacharias'
+];
 
 export default function MapPage() {
   const [title, setTitle] = useState('Großveranstaltung 2020');
@@ -23,10 +30,10 @@ export default function MapPage() {
       <PrintHidden>
         <Title>Lageplan</Title>
         <p>Erstell dir einfach deinen eigenen Lageplan.</p>
+        <input type="text" value={title} onChange={event => setTitle(event.target.value)} />
         <Button onClick={switchOrientation}>Format</Button>
         <Button onClick={moreLines}>Mehr</Button>
         <Button onClick={fewerLines}>Weniger</Button>
-        <input type="text" value={title} onChange={event => setTitle(event.target.value)} />
         <Button onClick={() => window.print()}>Drucken</Button>
       </PrintHidden>
       <Sheet width={orientation === LANDSCAPE ? LANDSCAPE_WIDTH : PORTRAIT_WIDTH}
@@ -77,7 +84,7 @@ const MapGrid = (props) => {
     numRows = Math.round(props.numLines * size.height / size.width)
     numColumns = props.numLines
   }
-  const columnNames = Array(numColumns).fill(0).map((_, i) => i + 1)
+  const columnNames = Array(numColumns).fill(0).map((_, i) => ALPHABET[i])
   const rowNames = Array(numRows).fill(0).map((_, i) => i + 1)
 
   return (
@@ -101,17 +108,26 @@ const MapGridTable = styled.table`
   z-index: 1;
   pointer-events: none;
   border: 1px solid black;
+  & thead th {
+    height: ${TABLE_HEADER_SIZE};
+    font-size: 6pt;
+  }
+  & thead th:first-letter {
+    font-size: 12pt;
+  }
   & td {
     border: 1px solid black;
   }
   & tbody th, & thead th:nth-child(1) {
-    width: 2em;
+    width: ${TABLE_HEADER_SIZE};
+    font-size: 12pt;
   }
 `
 
 const MapElement = styled.div`
-  width: 100%;
-  height: 100%;
+  width: calc(100% - ${TABLE_HEADER_SIZE} - 3px);
+  height: calc(100% - ${TABLE_HEADER_SIZE} - 3px);
+  margin: calc(${TABLE_HEADER_SIZE} + 3px) 0 0 calc(${TABLE_HEADER_SIZE} + 3px);
   background: #eee;
 `
 
