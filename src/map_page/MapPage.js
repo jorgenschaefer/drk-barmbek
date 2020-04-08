@@ -1,5 +1,7 @@
 import React, { useState, useLayoutEffect, useRef } from "react";
 import styled from 'styled-components'
+import GoogleMapReact from 'google-map-react';
+
 import { colors, Content, Title, Link, Button } from '../DRKStyle';
 
 const TABLE_HEADER_SIZE = '6mm'
@@ -48,7 +50,15 @@ export default function MapPage() {
           { orientation === PORTRAIT && <PrintTitle align="left">{title}</PrintTitle> }
           <Stacked>
             <MapGrid numLines={numLines} key={orientation} />
-            <MapElement/>
+            <MapElement>
+              <GoogleMapReact
+                bootstrapURLKeys={{ key: 'AIzaSyC8uc5De4G80Osg0rYWHKCmhbHzfobdvQk&language=de',
+                                    language: 'de' }}
+                defaultCenter={{lat: 53.5854, lng: 10.0480}}
+                defaultZoom={17}
+                options={{ disableDefaultUI: true, scaleControl: true }}
+              />
+            </MapElement>
           </Stacked>
         </SheetContent>
         <SheetFooter>
@@ -128,7 +138,6 @@ const MapElement = styled.div`
   width: calc(100% - ${TABLE_HEADER_SIZE} - 3px);
   height: calc(100% - ${TABLE_HEADER_SIZE} - 3px);
   margin: calc(${TABLE_HEADER_SIZE} + 3px) 0 0 calc(${TABLE_HEADER_SIZE} + 3px);
-  background: #eee;
 `
 
 const PrintTitle = styled.h1`
