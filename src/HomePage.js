@@ -6,10 +6,7 @@ export default function HomePage() {
   return (
     <Content>
       <Title>DRK Barmbek</Title>
-      <Header>Überschrift</Header>
-      <Subheader>Unterüberschrift</Subheader>
-      <Link to="/app">App</Link>
-      <div>Normaler Text</div>
+      <p>Willkommen auf den Webseiten der Bereitschaft Barmbek im DRK Ortsverein Barmbek-Uhlenhorst.</p>
     </Content>
   );
 }

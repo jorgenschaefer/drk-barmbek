@@ -1,8 +1,9 @@
 import React, { useState, useLayoutEffect, useRef } from "react";
 import styled from 'styled-components'
 import GoogleMapReact from 'google-map-react';
+import { Map as LeafletMapReact, TileLayer, ScaleControl } from 'react-leaflet'
 
-import { colors, Content, Title, Link, Button } from '../DRKStyle';
+import { colors, Content, Title, Button } from '../DRKStyle';
 
 const TABLE_HEADER_SIZE = '6mm'
 const PORTRAIT = 'portrait'
@@ -25,15 +26,17 @@ export default function MapPage() {
   const [numLines, setNumLines] = useState(5)
   const moreLines = () => setNumLines(lines => Math.min(15, lines + 1))
   const fewerLines = () => setNumLines(lines => Math.max(1, lines - 1))
+  const [mapType, setMapType] = useState('google')
+  const switchMapType = () => setMapType(oldType => oldType === 'google' ? 'osm' : 'google')
   const date = new Date().toLocaleDateString('de-DE');
 
   return (
     <Content>
       <PrintHidden>
         <Title>Lageplan</Title>
-        <p>Erstell dir einfach deinen eigenen Lageplan.</p>
         <input type="text" value={title} onChange={event => setTitle(event.target.value)} />
         <Button onClick={switchOrientation}>Format</Button>
+        <Button onClick={switchMapType}>Karte</Button>
         <Button onClick={moreLines}>Mehr</Button>
         <Button onClick={fewerLines}>Weniger</Button>
         <Button onClick={() => window.print()}>Drucken</Button>
@@ -42,7 +45,11 @@ export default function MapPage() {
              height={orientation === LANDSCAPE ? LANDSCAPE_HEIGHT : PORTRAIT_HEIGHT}
              headerPadding={orientation === LANDSCAPE ? "10mm" : "15mm"}>
         <SheetHeader>
-          <Sender>DRK Ortsverein<br/>Barmbek-Uhlenhorst</Sender>
+          <Sender>
+            DRK Ortsverein<br/>
+            Barmbek-Uhlenhorst<br/>
+            Bereitschaft
+          </Sender>
           { orientation === LANDSCAPE && <PrintTitle align="center">{title}</PrintTitle> }
           <Logo/>
         </SheetHeader>
@@ -50,15 +57,7 @@ export default function MapPage() {
           { orientation === PORTRAIT && <PrintTitle align="left">{title}</PrintTitle> }
           <Stacked>
             <MapGrid numLines={numLines} key={orientation} />
-            <MapElement>
-              <GoogleMapReact
-                bootstrapURLKeys={{ key: 'AIzaSyC8uc5De4G80Osg0rYWHKCmhbHzfobdvQk&language=de',
-                                    language: 'de' }}
-                defaultCenter={{lat: 53.5854, lng: 10.0480}}
-                defaultZoom={17}
-                options={{ disableDefaultUI: true, scaleControl: true }}
-              />
-            </MapElement>
+            <MapElement mapType={mapType} />
           </Stacked>
         </SheetContent>
         <SheetFooter>
@@ -100,11 +99,13 @@ const MapGrid = (props) => {
   return (
       <MapGridTable ref={ref}>
       <thead>
-        <th></th>
-        {columnNames.map(colName => <th>{colName}</th>)}
+        <tr>
+          <th></th>
+          {columnNames.map((colName, i) => <th key={i}>{colName}</th>)}
+        </tr>
       </thead>
       <tbody>
-        {rowNames.map(rowName => <tr><th>{rowName}</th>{columnNames.map(colName => <td></td>)}</tr>)}
+        {rowNames.map((rowName, i) => <tr key={i}><th>{rowName}</th>{columnNames.map((colName, j) => <td key={j}></td>)}</tr>)}
       </tbody>
       </MapGridTable>
   )
@@ -134,7 +135,43 @@ const MapGridTable = styled.table`
   }
 `
 
-const MapElement = styled.div`
+const MapElement = props => {
+  const { mapType } = props
+  const [mapState, setMapState] = useState({ lat: 53.5853, lng: 10.0480, zoom: 17 })
+  if (mapType === 'google') {
+    return <MapElementStyle>
+             <GoogleMapReact
+               bootstrapURLKeys={{ key: 'AIzaSyC8uc5De4G80Osg0rYWHKCmhbHzfobdvQk&language=de',
+                                   language: 'de' }}
+               center={[ mapState.lat, mapState.lng ]}
+               zoom={ mapState.zoom }
+               options={{ disableDefaultUI: true, scaleControl: true }}
+               onChange={map => setMapState({ lat: map.center.lat,
+                                              lng: map.center.lng,
+                                              zoom: map.zoom })}
+             />
+           </MapElementStyle>
+  } else {
+    return <MapElementStyle>
+             <LeafletMapReact
+               center={[mapState.lat, mapState.lng]}
+               zoom={mapState.zoom}
+               zoomControl={false}
+               onMoveEnd={event => setMapState({ lat: event.target.getCenter().lat,
+                                                 lng: event.target.getCenter().lng,
+                                                 zoom: event.target.getZoom() })}>
+
+               <TileLayer
+                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                 attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+               />
+               <ScaleControl imperial={false} />
+             </LeafletMapReact>
+           </MapElementStyle>
+  }
+}
+
+const MapElementStyle = styled.div`
   width: calc(100% - ${TABLE_HEADER_SIZE} - 3px);
   height: calc(100% - ${TABLE_HEADER_SIZE} - 3px);
   margin: calc(${TABLE_HEADER_SIZE} + 3px) 0 0 calc(${TABLE_HEADER_SIZE} + 3px);
