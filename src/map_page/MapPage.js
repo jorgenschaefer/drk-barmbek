@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useLayoutEffect, useRef } from "react";
 import styled from 'styled-components'
 import { colors, Content, Title, Link, Button } from '../DRKStyle';
 
-import useGrid from './useGrid';
+const PORTRAIT = 'portrait'
+const LANDSCAPE = 'landscape'
+const PORTRAIT_WIDTH = '210mm'
+const PORTRAIT_HEIGHT = '297mm'
+const LANDSCAPE_WIDTH = '297mm'
+const LANDSCAPE_HEIGHT = '210mm'
 
 export default function MapPage() {
   const [title, setTitle] = useState('Großveranstaltung 2020');
-  const [grid, setGrid] = useGrid();
-  const switchOrientation = () => setGrid(grid.switchOrientation())
+  const [orientation, setOrientation] = useState(LANDSCAPE)
+  const switchOrientation = () => setOrientation(o => o === LANDSCAPE ? PORTRAIT : LANDSCAPE)
+  const [numLines, setNumLines] = useState(5)
+  const moreLines = () => setNumLines(lines => Math.min(15, lines + 1))
+  const fewerLines = () => setNumLines(lines => Math.max(1, lines - 1))
   const date = new Date().toLocaleDateString('de-DE');
 
   return (
@@ -16,21 +24,23 @@ export default function MapPage() {
         <Title>Lageplan</Title>
         <p>Erstell dir einfach deinen eigenen Lageplan.</p>
         <Button onClick={switchOrientation}>Format</Button>
-        <Button onClick={() => setGrid(grid.increase())}>Mehr</Button>
-        <Button onClick={() => setGrid(grid.decrease())}>Weniger</Button>
+        <Button onClick={moreLines}>Mehr</Button>
+        <Button onClick={fewerLines}>Weniger</Button>
         <input type="text" value={title} onChange={event => setTitle(event.target.value)} />
         <Button onClick={() => window.print()}>Drucken</Button>
       </PrintHidden>
-      <Sheet orientation={grid.orientation}>
+      <Sheet width={orientation === LANDSCAPE ? LANDSCAPE_WIDTH : PORTRAIT_WIDTH}
+             height={orientation === LANDSCAPE ? LANDSCAPE_HEIGHT : PORTRAIT_HEIGHT}
+             headerPadding={orientation === LANDSCAPE ? "10mm" : "15mm"}>
         <SheetHeader>
           <Sender>DRK Ortsverein<br/>Barmbek-Uhlenhorst</Sender>
-      <PrintTitle orientation={grid.orientation} show={grid.isLandscape()}>{title}</PrintTitle>
+          { orientation === LANDSCAPE && <PrintTitle align="center">{title}</PrintTitle> }
           <Logo/>
         </SheetHeader>
         <SheetContent>
-      <PrintTitle orientation={grid.orientation} show={grid.isPortrait()}>{title}</PrintTitle>
+          { orientation === PORTRAIT && <PrintTitle align="left">{title}</PrintTitle> }
           <Stacked>
-            <MapGrid columns={grid.columnNames()} rows={grid.rowNames()}/>
+            <MapGrid numLines={numLines} key={orientation} />
             <MapElement/>
           </Stacked>
         </SheetContent>
@@ -43,8 +53,7 @@ export default function MapPage() {
 }
 
 const Stacked = styled.div`
-  width: 100%;
-  height: 100%;
+  flex: 2;
   display: grid;
   grid-template: [content] 1fr / [content] 1fr;
   & > * {
@@ -54,16 +63,31 @@ const Stacked = styled.div`
 `
 
 const MapGrid = (props) => {
-  const { columns, rows } = props
+  const [size, setSize] = useState({ height: 210, width: 297 })
+  const ref = useRef(null)
+  useLayoutEffect(() => {
+    setSize({ height: ref.current.clientHeight, width: ref.current.clientWidth })
+  }, [ref])
+
+  let numColumns, numRows
+  if (size.height < size.width) {
+    numRows = props.numLines
+    numColumns = Math.round(props.numLines * size.width / size.height)
+  } else {
+    numRows = Math.round(props.numLines * size.height / size.width)
+    numColumns = props.numLines
+  }
+  const columnNames = Array(numColumns).fill(0).map((_, i) => i + 1)
+  const rowNames = Array(numRows).fill(0).map((_, i) => i + 1)
 
   return (
-      <MapGridTable>
+      <MapGridTable ref={ref}>
       <thead>
         <th></th>
-        {columns.map(colName => <th>{colName}</th>)}
+        {columnNames.map(colName => <th>{colName}</th>)}
       </thead>
       <tbody>
-        {rows.map(rowName => <tr><th>{rowName}</th>{columns.map(colName => <td></td>)}</tr>)}
+        {rowNames.map(rowName => <tr><th>{rowName}</th>{columnNames.map(colName => <td></td>)}</tr>)}
       </tbody>
       </MapGridTable>
   )
@@ -91,16 +115,9 @@ const MapElement = styled.div`
   background: #eee;
 `
 
-const PrintTitle = (props) => {
-  if (!props.show) {
-    return null;
-  }
-  return <PrintH1 orientation={props.orientation}>{props.children}</PrintH1>
-}
-
-const PrintH1 = styled.h1`
+const PrintTitle = styled.h1`
   color: ${colors.drkred};
-  text-align: ${props => props.orientation === 'landscape' ? 'center' : 'left'};
+  text-align: ${props => props.align};
   margin: 0;
   padding: 0;
   font-family: Georgia, Times, Times New Roman, serif;
@@ -120,19 +137,19 @@ const Sheet = styled.div`
     margin: 10px 0;
   }
 
-  width: ${props => props.orientation === 'landscape' ? "297mm" : "210mm"};
-  height: calc(${props => props.orientation === 'landscape' ? "210mm" : "297mm"} - 0.1mm);
+  width: ${props => props.width};
+  height: calc(${props => props.height} - 0.1mm);
   color: black;
   display: grid;
   grid-template-columns: 15mm auto 15mm;
-  grid-template-rows: ${props => props.orientation === 'landscape' ? "10mm" : "15mm"} 15mm ${props => props.orientation === 'landscape' ? "10mm" : "15mm"} auto 10mm ${props => props.orientation === 'landscape' ? "10mm" : "15mm"};
+  grid-template-rows: ${props => props.headerPadding} 15mm ${props => props.headerPadding} auto 10mm ${props => props.headerPadding};
   grid-template-areas:
     ". . ."
     ". header ."
     ". . ."
     ". content ."
     ". footer ."
-    ". . .";
+    ". . ."
 `
 
 const SheetHeader = styled.div`
@@ -159,6 +176,8 @@ const SheetContent = styled.div`
   grid-area: content;
   font-size: 10pt;
   line-height: 14pt;
+  display: flex;
+  flex-direction: column;
 `
 
 const SheetFooter = styled.div`
