@@ -76,6 +76,18 @@ export const Subheader = styled.h3`
 
 export const Link = styled(RouterLink)`
   color: ${colors.midblue};
+  text-decoration: none;
+  :hover {
+    text-decoration: underline;
+  }
+`
+
+export const ExternalLink = styled.a`
+  color: ${colors.midblue};
+  text-decoration: none;
+  :hover {
+    text-decoration: underline;
+  }
 `
 
 export const Button = styled.button`
