@@ -46,9 +46,9 @@ export default function MapPage() {
              headerPadding={orientation === LANDSCAPE ? "10mm" : "15mm"}>
         <SheetHeader>
           <Sender>
-            DRK Ortsverein<br/>
-            Barmbek-Uhlenhorst<br/>
-            Bereitschaft
+            DRK Kreisverband<br/>
+            Hamburg-Nordost e.V.<br/>
+            <b>Bereitschaft Barmbek</b>
           </Sender>
           { orientation === LANDSCAPE && <PrintTitle align="center">{title}</PrintTitle> }
           <Logo/>

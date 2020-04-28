@@ -18,7 +18,7 @@ export default function AppPage() {
       </p>
 
       <a href="/download/DRKAlarm.apk">
-        <img src="/google-play-badge.png" style={{ width: "150px" }}/>
+        <img src="/google-play-badge.png" style={{ width: "150px" }} alt="Download App"/>
       </a>
     </Content>
   )

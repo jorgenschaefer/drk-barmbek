@@ -22,16 +22,10 @@ export const Page = styled.div`
   background: white;
 `
 
-export const Menu = (props) => (
-  <MenuBar>
-    <MenuLogo><DRKIcon /></MenuLogo>
-    <MenuItems>{props.children}</MenuItems>
-  </MenuBar>
-)
-
-const MenuBar = styled.div`
+export const HeaderBar = styled.div`
   box-shadow: 0 6px 8px -6px #b4b4b4;
   display: flex;
+  justify-content: space-between;
   width: 100%;
   height: 50px;
 
@@ -40,33 +34,9 @@ const MenuBar = styled.div`
   }
 `
 
-const MenuLogo = styled.div`
-  flex: 0;
-`
-
-export const DRKIcon = styled.div`
-  height: 30px;
-  width: 100px;
-  margin: 10px 20px;
-  background-image: url('/logo.svg');
-  background-size: contain;
-  background-position: left;
-  background-repeat: no-repeat;
-`
-
-const MenuItems = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-`
-
-export const MenuLink = styled(RouterLink)`
-  flex-grow: 0;
-  margin: auto 10px;
-  color: ${colors.midblue};
-  text-decoration: none;
-  font-weight: bold;
-`
+export const HeaderLogo = ({ to }) => (
+  <RouterLink to={ to }><img style={{ height: "100%" }} src="/drk-barmbek-logo.png" alt="Übersicht" /></RouterLink>
+)
 
 export const Content = styled.div`
   max-width: 1160px;
