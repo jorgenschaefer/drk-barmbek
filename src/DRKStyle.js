@@ -38,6 +38,10 @@ export const HeaderLogo = ({ to }) => (
   <RouterLink to={ to }><img style={{ height: "100%" }} src="/drk-barmbek-logo.png" alt="Übersicht" /></RouterLink>
 )
 
+export const HeaderItem = styled.div`
+  flex: 0 1;
+`
+
 export const Content = styled.div`
   max-width: 1160px;
   margin: 0 auto;
