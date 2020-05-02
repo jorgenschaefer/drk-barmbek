@@ -5,7 +5,7 @@ import {
   Route
 } from "react-router-dom";
 
-import { Page, HeaderBar, HeaderLogo, HeaderItem } from './DRKStyle';
+import { Page, HeaderBar, HeaderLogo, HeaderItemLeft, HeaderItemRight } from './DRKStyle';
 import { Menu, MenuLink } from './Menu';
 import HomePage from './HomePage';
 import AppPage from './AppPage';
@@ -18,10 +18,10 @@ export default function App () {
     <Router>
       <Page>
         <HeaderBar>
-          <HeaderItem>
+          <HeaderItemLeft>
             <HeaderLogo to="/" />
-          </HeaderItem>
-          <HeaderItem>
+          </HeaderItemLeft>
+          <HeaderItemRight>
             <Menu>
               <MenuLink to="/app">Alarm-App</MenuLink>
               <MenuLink to="/map">Karte</MenuLink>
@@ -29,7 +29,7 @@ export default function App () {
               <hr/>
               <MenuLink to="/impressum">Impressum</MenuLink>
             </Menu>
-          </HeaderItem>
+          </HeaderItemRight>
         </HeaderBar>
         <Switch>
           <Route exact path="/">

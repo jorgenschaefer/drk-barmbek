@@ -24,9 +24,12 @@ export const Page = styled.div`
 
 export const HeaderBar = styled.div`
   box-shadow: 0 6px 8px -6px #b4b4b4;
-  display: flex;
-  justify-content: space-between;
+  position: fixed;
   width: 100%;
+  top: 0;
+  left: 0;
+  background: #fff;
+  z-index: 10;
   height: 50px;
 
   @media print {
@@ -35,16 +38,22 @@ export const HeaderBar = styled.div`
 `
 
 export const HeaderLogo = ({ to }) => (
-  <RouterLink to={ to }><img style={{ height: "100%" }} src="/drk-barmbek-logo.png" alt="Übersicht" /></RouterLink>
+  <RouterLink to={ to }><img style={{ height: "50px" }} src="/drk-barmbek-logo.png" alt="Übersicht" /></RouterLink>
 )
 
-export const HeaderItem = styled.div`
-  flex: 0 1;
+export const HeaderItemLeft = styled.div`
+  position: absolute;
+  left: 0;
+`
+
+export const HeaderItemRight = styled.div`
+  position: absolute;
+  right: 0;
 `
 
 export const Content = styled.div`
   max-width: 1160px;
-  margin: 0 auto;
+  margin: 60px auto 0 auto;
   padding: 0 20px;
 
   @media print {

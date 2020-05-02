@@ -39,7 +39,8 @@ const MenuDropdown = ({ isVisible, ...props }) => {
 const MenuDropdownUL = styled.ul`
   position: absolute;
   right: 0;
-  margin: 50px 0 0 0;
+  top: 50px;
+  margin: 0;
   padding: 10px;
   background: #fff;
   box-shadow: -5px 12px 20px #b4b4b4;
