@@ -1,0 +1,8 @@
+#!/bin/sh
+
+set -e
+cd "$(dirname "$0")/.."
+
+npm run build
+aws s3 sync  --delete  build/ s3://drk-barmbek.de
+aws cloudfront create-invalidation --distribution-id E15XZP3ZYCIBZY --paths '/*'
