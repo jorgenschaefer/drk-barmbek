@@ -110,3 +110,15 @@ export const Button = styled.button`
   padding: 5px 20px;
   margin: 5px;
 `
+
+export const Footer = styled.div`
+  border-top: 1px solid ${colors.midgray};
+  width: 25%;
+  padding-top: 1em;
+  margin: 2em;
+  font-size: 75%;
+
+  @media print {
+    display: none;
+  }
+`

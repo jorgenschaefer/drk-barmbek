@@ -5,8 +5,7 @@ import {
   Route
 } from "react-router-dom";
 
-import { Page, HeaderBar, HeaderLogo, HeaderItemLeft, HeaderItemRight } from './DRKStyle';
-import { Menu, MenuLink } from './Menu';
+import { Page, HeaderBar, HeaderLogo, HeaderItemLeft, HeaderItemRight, Footer, Link } from './DRKStyle';
 import HomePage from './HomePage';
 import AppPage from './AppPage';
 import MapPage from './map_page/MapPage';
@@ -21,15 +20,6 @@ export default function App () {
           <HeaderItemLeft>
             <HeaderLogo to="/" />
           </HeaderItemLeft>
-          <HeaderItemRight>
-            <Menu>
-              <MenuLink to="/app">Alarm-App</MenuLink>
-              <MenuLink to="/map">Karte</MenuLink>
-              <MenuLink to="/links">Linksammlung</MenuLink>
-              <hr/>
-              <MenuLink to="/impressum">Impressum</MenuLink>
-            </Menu>
-          </HeaderItemRight>
         </HeaderBar>
         <Switch>
           <Route exact path="/">
@@ -48,6 +38,10 @@ export default function App () {
             <ImpressumPage />
           </Route>
         </Switch>
+
+        <Footer>
+          <Link to="/impressum">Impressum</Link>
+        </Footer>
       </Page>
     </Router>
   );
