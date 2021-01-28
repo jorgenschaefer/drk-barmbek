@@ -24,6 +24,9 @@ export const Page = styled.div`
 `;
 
 export const HeaderBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   box-shadow: 0 6px 8px -6px #b4b4b4;
   position: fixed;
   width: 100%;
@@ -41,7 +44,7 @@ export const HeaderBar = styled.div`
 export const HeaderLogo = ({ to }) => (
   <RouterLink to={to}>
     <img
-      style={{ height: "50px" }}
+      style={{ height: "50px", display: "block" }}
       src="/drk-barmbek-logo.png"
       alt="Übersicht"
     />
@@ -51,11 +54,10 @@ HeaderLogo.propTypes = {
   to: PropTypes.string,
 };
 
-export const HeaderItemLeft = styled.div`
-  display: flex;
-  align-items: center;
-  position: absolute;
-  left: 0;
+export const HeaderItemLeft = styled.div``;
+
+export const HeaderItemRight = styled.div`
+  margin-right: 15px;
 `;
 
 export const HeaderIntern = styled.div`
@@ -63,7 +65,6 @@ export const HeaderIntern = styled.div`
   border: 1px solid ${colors.softred};
   color: ${colors.lightgray};
   padding: 0.2em 1em;
-  margin-left: 2em;
   border-radius: 5px;
   font-weight: bold;
   white-space: nowrap;
@@ -137,6 +138,18 @@ export const Footer = styled.div`
   font-size: 75%;
 
   @media print {
+    display: none;
+  }
+`;
+
+export const SmallScreen = styled.div`
+  @media (min-width: 430px) {
+    display: none;
+  }
+`;
+
+export const LargeScreen = styled.div`
+  @media (max-width: 429px) {
     display: none;
   }
 `;

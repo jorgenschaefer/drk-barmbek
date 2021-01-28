@@ -6,9 +6,12 @@ import {
   HeaderBar,
   HeaderLogo,
   HeaderItemLeft,
+  HeaderItemRight,
   HeaderIntern,
   Footer,
   Link,
+  SmallScreen,
+  LargeScreen,
 } from "./DRKStyle";
 import HomePage from "./HomePage";
 import AppPage from "./AppPage";
@@ -23,8 +26,15 @@ export default function App() {
         <HeaderBar>
           <HeaderItemLeft>
             <HeaderLogo to="/" />
-            <HeaderIntern>Interner Bereich</HeaderIntern>
           </HeaderItemLeft>
+          <HeaderItemRight>
+            <SmallScreen>
+              <HeaderIntern>Intern</HeaderIntern>
+            </SmallScreen>
+            <LargeScreen>
+              <HeaderIntern>Interner Bereich</HeaderIntern>
+            </LargeScreen>
+          </HeaderItemRight>
         </HeaderBar>
         <Switch>
           <Route exact path="/">
