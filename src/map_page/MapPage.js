@@ -1,4 +1,5 @@
 import React, { useState, useLayoutEffect, useRef } from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import GoogleMapReact from "google-map-react";
 import { Map as LeafletMapReact, TileLayer, ScaleControl } from "react-leaflet";
@@ -161,6 +162,9 @@ const MapGrid = (props) => {
       </tbody>
     </MapGridTable>
   );
+};
+MapGrid.propTypes = {
+  numLines: PropTypes.number,
 };
 
 const MapGridTable = styled.table`

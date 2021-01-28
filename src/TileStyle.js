@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
@@ -12,6 +13,11 @@ export const Tile = (props) => (
     </TileLink>
   </TileItem>
 );
+Tile.propTypes = {
+  to: PropTypes.string,
+  icon: PropTypes.string,
+  children: PropTypes.any,
+};
 
 export const TileList = styled.ul`
   list-style-type: none;

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -46,15 +47,13 @@ export const HeaderLogo = ({ to }) => (
     />
   </RouterLink>
 );
+HeaderLogo.propTypes = {
+  to: PropTypes.string,
+};
 
 export const HeaderItemLeft = styled.div`
   position: absolute;
   left: 0;
-`;
-
-export const HeaderItemRight = styled.div`
-  position: absolute;
-  right: 0;
 `;
 
 export const Content = styled.div`

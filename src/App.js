@@ -6,7 +6,6 @@ import {
   HeaderBar,
   HeaderLogo,
   HeaderItemLeft,
-  HeaderItemRight,
   Footer,
   Link,
 } from "./DRKStyle";
