@@ -25,6 +25,10 @@ export default function HomePage() {
             werden.
           </p>
         </Tile>
+        <Tile to="/where" icon="🛠">
+          <b>WoIstWas</b>
+          <p>Zeuch finden im Rucksack. Beta.</p>
+        </Tile>
         <Tile to="/map" icon="🌎">
           <b>Lageplan</b>
           <p>Eigene Karten mit Koordinaten für Einsätze.</p>

@@ -15,6 +15,7 @@ import {
 } from "./DRKStyle";
 import HomePage from "./HomePage";
 import AppPage from "./AppPage";
+import WherePage from "./where_page/WherePage";
 import MapPage from "./map_page/MapPage";
 import LinkPage from "./LinkPage";
 import ImpressumPage from "./ImpressumPage";
@@ -42,6 +43,9 @@ export default function App() {
           </Route>
           <Route path="/app">
             <AppPage />
+          </Route>
+          <Route path="/where">
+            <WherePage />
           </Route>
           <Route path="/map">
             <MapPage />
