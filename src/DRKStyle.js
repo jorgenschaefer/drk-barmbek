@@ -1,17 +1,17 @@
 import React from "react";
-import styled from 'styled-components'
+import styled from "styled-components";
 import { Link as RouterLink } from "react-router-dom";
 
 export const colors = {
-  drkred: 'rgb(230, 0, 5)',
-  softred: 'rgb(228, 100, 80)',
-  darkblue: 'rgb(0, 45, 85)',
-  midblue: 'rgb(0, 117, 169)',
-  lightblue: 'rgb(235, 245, 255)',
-  darkgray: 'rgb(85, 79, 74)',
-  midgray: 'rgb(224, 221, 214)',
-  lightgray: 'rgb(239, 238, 234)'
-}
+  drkred: "rgb(230, 0, 5)",
+  softred: "rgb(228, 100, 80)",
+  darkblue: "rgb(0, 45, 85)",
+  midblue: "rgb(0, 117, 169)",
+  lightblue: "rgb(235, 245, 255)",
+  darkgray: "rgb(85, 79, 74)",
+  midgray: "rgb(224, 221, 214)",
+  lightgray: "rgb(239, 238, 234)",
+};
 
 export const Page = styled.div`
   color: ${colors.darkgray};
@@ -20,7 +20,7 @@ export const Page = styled.div`
   margin: 0;
   padding: 0;
   background: white;
-`
+`;
 
 export const HeaderBar = styled.div`
   box-shadow: 0 6px 8px -6px #b4b4b4;
@@ -35,21 +35,27 @@ export const HeaderBar = styled.div`
   @media print {
     display: none;
   }
-`
+`;
 
 export const HeaderLogo = ({ to }) => (
-  <RouterLink to={ to }><img style={{ height: "50px" }} src="/drk-barmbek-logo.png" alt="Übersicht" /></RouterLink>
-)
+  <RouterLink to={to}>
+    <img
+      style={{ height: "50px" }}
+      src="/drk-barmbek-logo.png"
+      alt="Übersicht"
+    />
+  </RouterLink>
+);
 
 export const HeaderItemLeft = styled.div`
   position: absolute;
   left: 0;
-`
+`;
 
 export const HeaderItemRight = styled.div`
   position: absolute;
   right: 0;
-`
+`;
 
 export const Content = styled.div`
   max-width: 1160px;
@@ -61,7 +67,7 @@ export const Content = styled.div`
     padding: 0;
     max-width: auto;
   }
-`
+`;
 
 export const Title = styled.h1`
   color: ${colors.softred};
@@ -69,7 +75,7 @@ export const Title = styled.h1`
   line-height: 1.26;
   font-weight: normal;
   margin: 0.5em 0;
-`
+`;
 
 export const Header = styled.h2`
   color: ${colors.softred};
@@ -77,7 +83,7 @@ export const Header = styled.h2`
   line-height: 1.26;
   font-weight: normal;
   margin: 0.5em 0;
-`
+`;
 
 export const Subheader = styled.h3`
   color: ${colors.softred};
@@ -85,7 +91,7 @@ export const Subheader = styled.h3`
   line-height: 1.26;
   font-weight: normal;
   margin: 0.5em 0;
-`
+`;
 
 export const Link = styled(RouterLink)`
   color: ${colors.midblue};
@@ -93,7 +99,7 @@ export const Link = styled(RouterLink)`
   :hover {
     text-decoration: underline;
   }
-`
+`;
 
 export const ExternalLink = styled.a`
   color: ${colors.midblue};
@@ -101,7 +107,7 @@ export const ExternalLink = styled.a`
   :hover {
     text-decoration: underline;
   }
-`
+`;
 
 export const Button = styled.button`
   background: ${colors.midblue};
@@ -109,7 +115,7 @@ export const Button = styled.button`
   border: 0;
   padding: 5px 20px;
   margin: 5px;
-`
+`;
 
 export const Footer = styled.div`
   border-top: 1px solid ${colors.midgray};
@@ -121,4 +127,4 @@ export const Footer = styled.div`
   @media print {
     display: none;
   }
-`
+`;

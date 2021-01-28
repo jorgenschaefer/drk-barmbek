@@ -1,5 +1,5 @@
 import React from "react";
-import { Content, Title } from './DRKStyle';
+import { Content, Title } from "./DRKStyle";
 
 export default function AppPage() {
   return (
@@ -7,8 +7,8 @@ export default function AppPage() {
       <Title>DRK Alarm App</Title>
 
       <p>
-        Mit der DRK Alarm App erhälst du Alarmmeldungen mit wenig Aufwand.
-        Die Installation erfolgt nicht über den PlayStore, so dass mehrfach
+        Mit der DRK Alarm App erhälst du Alarmmeldungen mit wenig Aufwand. Die
+        Installation erfolgt nicht über den PlayStore, so dass mehrfach
         bestätigt werden muss, dass die App wirklich installiert werden soll.
       </p>
 
@@ -18,8 +18,12 @@ export default function AppPage() {
       </p>
 
       <a href="/download/DRKAlarm.apk">
-        <img src="/google-play-badge.png" style={{ width: "150px" }} alt="Download App"/>
+        <img
+          src="/google-play-badge.png"
+          style={{ width: "150px" }}
+          alt="Download App"
+        />
       </a>
     </Content>
-  )
+  );
 }

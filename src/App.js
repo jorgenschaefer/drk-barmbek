@@ -1,18 +1,22 @@
 import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from "react-router-dom";
+  Page,
+  HeaderBar,
+  HeaderLogo,
+  HeaderItemLeft,
+  HeaderItemRight,
+  Footer,
+  Link,
+} from "./DRKStyle";
+import HomePage from "./HomePage";
+import AppPage from "./AppPage";
+import MapPage from "./map_page/MapPage";
+import LinkPage from "./LinkPage";
+import ImpressumPage from "./ImpressumPage";
 
-import { Page, HeaderBar, HeaderLogo, HeaderItemLeft, HeaderItemRight, Footer, Link } from './DRKStyle';
-import HomePage from './HomePage';
-import AppPage from './AppPage';
-import MapPage from './map_page/MapPage';
-import LinkPage from './LinkPage';
-import ImpressumPage from './ImpressumPage';
-
-export default function App () {
+export default function App() {
   return (
     <Router>
       <Page>
