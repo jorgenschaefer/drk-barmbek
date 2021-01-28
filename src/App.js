@@ -6,6 +6,7 @@ import {
   HeaderBar,
   HeaderLogo,
   HeaderItemLeft,
+  HeaderIntern,
   Footer,
   Link,
 } from "./DRKStyle";
@@ -22,6 +23,7 @@ export default function App() {
         <HeaderBar>
           <HeaderItemLeft>
             <HeaderLogo to="/" />
+            <HeaderIntern>Interner Bereich</HeaderIntern>
           </HeaderItemLeft>
         </HeaderBar>
         <Switch>

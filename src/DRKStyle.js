@@ -52,8 +52,21 @@ HeaderLogo.propTypes = {
 };
 
 export const HeaderItemLeft = styled.div`
+  display: flex;
+  align-items: center;
   position: absolute;
   left: 0;
+`;
+
+export const HeaderIntern = styled.div`
+  background: ${colors.drkred};
+  border: 1px solid ${colors.softred};
+  color: ${colors.lightgray};
+  padding: 0.2em 1em;
+  margin-left: 2em;
+  border-radius: 5px;
+  font-weight: bold;
+  white-space: nowrap;
 `;
 
 export const Content = styled.div`
