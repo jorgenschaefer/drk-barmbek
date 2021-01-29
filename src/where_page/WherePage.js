@@ -3,46 +3,55 @@ import PropTypes from "prop-types";
 import ImageMapper from "react-img-mapper";
 
 import { Content, Title, Header, Button } from "../DRKStyle";
+import { defaultBagStore } from './BagStore';
 
-const ITEMS = {
-  image: "/where/rucksack-unten.png",
-  areas: [
-    { id: "bz", shape: "rect", coords: [515, 297, 572, 524] },
-    { id: "coolpack", shape: "rect", coords: [107, 392, 236, 717] },
-  ],
-};
 
 export default function WherePage() {
-  const [items, setItems] = useState([]);
-  const addItem = (item) => setItems((items) => items.concat(item));
+  const [whereState, setWhereState] = useState(defaultBagStore);
+  const selectItem = item => {
+    setWhereState(bagStore => bagStore.selectItem(item));
+  }
+  const clearItem = () => {
+    setWhereState(bagStore => bagStore.clearSelectedItems());
+  }
 
+  return <WhereDisplay
+           image={whereState.getCurrentImage()}
+           imageWidth={whereState.getCurrentImageWidth()}
+           map={whereState.getCurrentMap()}
+           selected={whereState.getSelectedItems()}
+           onSelectItem={selectItem}
+           onClearSelectedItems={clearItem}
+         />;
+}
+
+const WhereDisplay = ({ image, imageWidth, map, selected, onSelectItem, onClearSelectedItems }) => {
   return (
     <Content>
       <Title>Wo ist was?</Title>
-      <ItemSelector items={ITEMS} onSelect={(item) => addItem(item)} />
-      <ItemBag items={items} clear={() => setItems([])} />
+      <ImageMapper
+        src={image}
+        map={map}
+        onClick={(area) => onSelectItem(area.id)}
+        imgWidth={imageWidth}
+      />
+      <ItemDisplay
+        items={selected}
+        clear={() => onClearSelectedItems()}
+      />
     </Content>
   );
 }
+WhereDisplay.propTypes = {
+  image: PropTypes.any,
+  imageWidth: PropTypes.any,
+  map: PropTypes.any,
+  selected: PropTypes.any,
+  onSelectItem: PropTypes.any,
+  onClearSelectedItems: PropTypes.any,
+}
 
-const ItemSelector = (props) => {
-  return (
-    <ImageMapper
-      src={props.items.image}
-      map={{ name: "blubb", areas: props.items.areas }}
-      onClick={(area) => props.onSelect(area.id)}
-      width={390}
-      height={423}
-      imgWidth={783}
-    />
-  );
-};
-ItemSelector.propTypes = {
-  items: PropTypes.any,
-  onSelect: PropTypes.func,
-};
-
-const ItemBag = (props) => {
+const ItemDisplay = (props) => {
   return (
     <div>
       <Header>Ausgewählt</Header>
@@ -55,7 +64,7 @@ const ItemBag = (props) => {
     </div>
   );
 };
-ItemBag.propTypes = {
+ItemDisplay.propTypes = {
   items: PropTypes.any,
   clear: PropTypes.func,
 };
