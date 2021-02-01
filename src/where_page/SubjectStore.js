@@ -1,6 +1,17 @@
+import subjectDefinitions from "./subjectDefinitions";
+
 export default class SubjectStore {
-  static createFromDefinition(definition) {
-    return new SubjectStore(definition, definition.initialContainer, []);
+  static getAllSubjects() {
+    return subjectDefinitions;
+  }
+
+  static fromName(subjectName) {
+    for (let def of subjectDefinitions) {
+      if (def.name === subjectName) {
+        return new SubjectStore(def, def.initialContainer, []);
+      }
+    }
+    return null;
   }
 
   constructor(definition, currentContainerName, inventory) {
@@ -26,6 +37,10 @@ export default class SubjectStore {
       name: this.currentContainerName,
       areas: this.currentContainer.areas,
     };
+  }
+
+  getTasks() {
+    return this.definition.tasks;
   }
 
   selectItem(item) {

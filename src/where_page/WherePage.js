@@ -5,14 +5,13 @@ import ImageMapper from "react-img-mapper";
 
 import { Content, Title, Header, Button } from "../DRKStyle";
 import { TileList, Tile } from "../TileStyle";
-import subjectDefinitions from "./subjectDefinitions";
 import SubjectStore from './SubjectStore';
 
 export default function WherePage() {
   return (
     <Router>
       <Switch>
-        <Route path="/where/:subject">
+        <Route path="/where/:subjectName">
           <SubjectDetails />
         </Route>
         <Route>
@@ -29,7 +28,7 @@ function SubjectSelection() {
       <Title>Wo ist was?</Title>
       <TileList>
         {
-          subjectDefinitions.map(
+          SubjectStore.getAllSubjects().map(
             (subject, i) => <Tile key={i} to={"/where/" + subject.name} icon={subject.icon}>{subject.displayName}</Tile>
           )
         }
@@ -39,18 +38,13 @@ function SubjectSelection() {
 }
 
 function SubjectDetails() {
-  const { subject } = useParams();
-  for (let def of subjectDefinitions) {
-    if (def.name === subject) {
-      return <SubjectComponent subjectDefinition={def} />
-    }
-  }
+  const { subjectName } = useParams();
+  const subjectStore = SubjectStore.fromName(subjectName);
+  return <SubjectComponent subjectStore={ subjectStore } />
 }
 
-function SubjectComponent({ subjectDefinition }) {
-  const [subjectState, setSubjectState] = useState(
-    () => SubjectStore.createFromDefinition(subjectDefinition)
-  );
+function SubjectComponent({ subjectStore }) {
+  const [subjectState, setSubjectState] = useState(subjectStore);
   const selectItem = (item) => {
     setSubjectState((subjectStore) => subjectStore.selectItem(item));
   };
@@ -78,7 +72,7 @@ function SubjectComponent({ subjectDefinition }) {
             onClearInventory={clearInventory}
           />
           <TaskDisplay
-            tasks={subjectDefinition.tasks}
+            tasks={subjectStore.getTasks()}
             isInventory={required => subjectState.isInventory(required)}
           />
         </div>
@@ -87,7 +81,7 @@ function SubjectComponent({ subjectDefinition }) {
   );
 }
 SubjectComponent.propTypes = {
-  subjectDefinition: PropTypes.any
+  subjectStore: PropTypes.any
 };
 
 const ItemDisplay = ({ items, onRemoveSelectedItem, onClearInventory }) => {
