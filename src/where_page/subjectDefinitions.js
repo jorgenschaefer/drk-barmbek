@@ -1,4 +1,4 @@
-const ChallengeDefinitions = [
+const subjectDefinitions = [
   {
     name: "streifensatz",
     displayName: "Streifensatz",
@@ -51,4 +51,4 @@ const ChallengeDefinitions = [
   }
 ];
 
-export default ChallengeDefinitions;
+export default subjectDefinitions;

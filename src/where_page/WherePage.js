@@ -5,32 +5,32 @@ import ImageMapper from "react-img-mapper";
 
 import { Content, Title, Header, Button } from "../DRKStyle";
 import { TileList, Tile } from "../TileStyle";
-import ChallengeDefinitions from "./ChallengeDefinitions";
-import ChallengeStore from './ChallengeStore';
+import subjectDefinitions from "./subjectDefinitions";
+import SubjectStore from './SubjectStore';
 
 export default function WherePage() {
   return (
     <Router>
       <Switch>
-        <Route path="/where/:challenge">
-          <ShowChallenge />
+        <Route path="/where/:subject">
+          <SubjectDetails />
         </Route>
         <Route>
-          <SelectChallenge />
+          <SubjectSelection />
         </Route>
       </Switch>
     </Router>
   );
 }
 
-function SelectChallenge() {
+function SubjectSelection() {
   return (
     <Content>
       <Title>Wo ist was?</Title>
       <TileList>
         {
-          ChallengeDefinitions.map(
-            (challenge, i) => <Tile key={i} to={"/where/" + challenge.name} icon={challenge.icon}>{challenge.displayName}</Tile>
+          subjectDefinitions.map(
+            (subject, i) => <Tile key={i} to={"/where/" + subject.name} icon={subject.icon}>{subject.displayName}</Tile>
           )
         }
       </TileList>
@@ -38,27 +38,27 @@ function SelectChallenge() {
   );
 }
 
-function ShowChallenge() {
-  const { challenge } = useParams();
-  for (let def of ChallengeDefinitions) {
-    if (def.name === challenge) {
-      return <ChallengeComponent challengeDefinition={def} />
+function SubjectDetails() {
+  const { subject } = useParams();
+  for (let def of subjectDefinitions) {
+    if (def.name === subject) {
+      return <SubjectComponent subjectDefinition={def} />
     }
   }
 }
 
-function ChallengeComponent({ challengeDefinition }) {
-  const [challengeState, setChallengeState] = useState(
-    () => ChallengeStore.createFromDefinition(challengeDefinition)
+function SubjectComponent({ subjectDefinition }) {
+  const [subjectState, setSubjectState] = useState(
+    () => SubjectStore.createFromDefinition(subjectDefinition)
   );
   const selectItem = (item) => {
-    setChallengeState((challengeStore) => challengeStore.selectItem(item));
+    setSubjectState((subjectStore) => subjectStore.selectItem(item));
   };
   const removeSelectedItem = (i) => {
-    setChallengeState((challengeStore) => challengeStore.removeSelectedItem(i));
+    setSubjectState((subjectStore) => subjectStore.removeSelectedItem(i));
   }
   const clearInventory = () => {
-    setChallengeState((challengeStore) => challengeStore.clearSelectedItems());
+    setSubjectState((subjectStore) => subjectStore.clearSelectedItems());
   };
 
   return (
@@ -66,28 +66,28 @@ function ChallengeComponent({ challengeDefinition }) {
       <Title>Wo ist was?</Title>
       <div style={{display: "flex", flexWrap: "wrap"}}>
         <ImageMapper
-          src={challengeState.getCurrentImage()}
-          map={challengeState.getCurrentMap()}
-          imgWidth={challengeState.getCurrentImageWidth()}
+          src={subjectState.getCurrentImage()}
+          map={subjectState.getCurrentMap()}
+          imgWidth={subjectState.getCurrentImageWidth()}
           onClick={area => selectItem(area.id)}
         />
         <div style={{display: "flex", flexDirection: "column", marginLeft: "1em"}}>
           <ItemDisplay
-            items={challengeState.getSelectedItems()}
+            items={subjectState.getSelectedItems()}
             onRemoveSelectedItem={removeSelectedItem}
             onClearInventory={clearInventory}
           />
           <TaskDisplay
-            tasks={challengeDefinition.tasks}
-            isInventory={required => challengeState.isInventory(required)}
+            tasks={subjectDefinition.tasks}
+            isInventory={required => subjectState.isInventory(required)}
           />
         </div>
       </div>
     </Content>
   );
 }
-ChallengeComponent.propTypes = {
-  challengeDefinition: PropTypes.any
+SubjectComponent.propTypes = {
+  subjectDefinition: PropTypes.any
 };
 
 const ItemDisplay = ({ items, onRemoveSelectedItem, onClearInventory }) => {

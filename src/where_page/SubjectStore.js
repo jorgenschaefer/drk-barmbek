@@ -1,6 +1,6 @@
-export default class ChallengeStore {
+export default class SubjectStore {
   static createFromDefinition(definition) {
-    return new ChallengeStore(definition, definition.initialContainer, []);
+    return new SubjectStore(definition, definition.initialContainer, []);
   }
 
   constructor(definition, currentContainerName, inventory) {
@@ -39,7 +39,7 @@ export default class ChallengeStore {
         inventory = inventory.concat(item);
       }
     }
-    return new ChallengeStore(this.definition, containerName, inventory);
+    return new SubjectStore(this.definition, containerName, inventory);
   }
 
   countInventory(item) {
@@ -54,11 +54,11 @@ export default class ChallengeStore {
 
   removeSelectedItem(index) {
     let inventory = this.inventory.filter((_, i) => i !== index);
-    return new ChallengeStore(this.definition, this.currentContainerName, inventory);
+    return new SubjectStore(this.definition, this.currentContainerName, inventory);
   }
 
   clearSelectedItems() {
-    return new ChallengeStore(this.definition, this.currentContainerName, []);
+    return new SubjectStore(this.definition, this.currentContainerName, []);
   }
 
   getSelectedItems() {
