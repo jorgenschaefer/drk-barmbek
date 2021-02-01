@@ -1,4 +1,4 @@
-const BagDefinitions = [
+const ChallengeDefinitions = [
   {
     name: "streifensatz",
     displayName: "Streifensatz",
@@ -6,12 +6,15 @@ const BagDefinitions = [
     items: {
       bz: {
         displayName: "Blutzuckermessgerät",
+        maxCount: 1,
       },
       coolpack: {
         displayName: "Kältesofortkompresse",
+        maxCount: 3,
       },
       absauge: {
         displayName: "Absauge",
+        maxCount: 1,
       },
     },
     containers: {
@@ -36,4 +39,4 @@ const BagDefinitions = [
   }
 ];
 
-export default BagDefinitions;
+export default ChallengeDefinitions;

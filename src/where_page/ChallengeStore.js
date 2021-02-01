@@ -29,11 +29,27 @@ export default class ChallengeStore {
   }
 
   selectItem(item) {
+    let containerName = this.currentContainerName;
+    let inventory = this.inventory;
     if (item in this.definition.containers) {
-      return new ChallengeStore(this.definition, item, this.inventory);
+      containerName = item;
     } else {
-      return new ChallengeStore(this.definition, this.currentContainerName, this.inventory.concat(item));
+      const itemDefinition = this.definition.items[item];
+      if (this.countInventory(item) < itemDefinition.maxCount) {
+        inventory = inventory.concat(item);
+      }
     }
+    return new ChallengeStore(this.definition, containerName, inventory);
+  }
+
+  countInventory(item) {
+    let count = 0;
+    for (let invItem of this.inventory) {
+      if (invItem === item) {
+        count++;
+      }
+    }
+    return count;
   }
 
   clearSelectedItems() {
@@ -46,3 +62,4 @@ export default class ChallengeStore {
     );
   }
 }
+
