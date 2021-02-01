@@ -1,12 +1,46 @@
 import React, { useState } from "react";
+import { BrowserRouter as Router, Switch, Route, useParams, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import ImageMapper from "react-img-mapper";
 
 import { Content, Title, Header, Button } from "../DRKStyle";
-import { defaultBagStore } from "./BagStore";
+import BagStore from "./BagStore";
 
 export default function WherePage() {
-  const [whereState, setWhereState] = useState(defaultBagStore);
+  return (
+    <Router>
+      <Switch>
+        <Route path="/where/:task">
+          <ShowContainer />
+        </Route>
+        <Route>
+          <SelectContainer />
+        </Route>
+      </Switch>
+    </Router>
+  );
+}
+
+function SelectContainer() {
+  return (
+    <Content>
+      <Title>Wo ist was?</Title>
+      <ul>
+        {
+          BagStore.getTasks().map(
+            (task, i) => <li key={i}><Link to={"/where/" + task.name}>{task.displayName}</Link></li>
+          )
+        }
+      </ul>
+    </Content>
+  );
+
+}
+
+
+function ShowContainer() {
+  const { task } = useParams();
+  const [whereState, setWhereState] = useState(() => BagStore.getStore(task));
   const selectItem = (item) => {
     setWhereState((bagStore) => bagStore.selectItem(item));
   };
