@@ -1,66 +1,79 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Switch, Route, useParams, Link } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import ImageMapper from "react-img-mapper";
 
 import { Content, Title, Header, Button } from "../DRKStyle";
-import BagStore from "./BagStore";
+import { TileList, Tile } from "../TileStyle";
+import ChallengeDefinitions from "./ChallengeDefinitions";
+import ChallengeStore from './ChallengeStore';
 
 export default function WherePage() {
   return (
     <Router>
       <Switch>
-        <Route path="/where/:task">
-          <ShowContainer />
+        <Route path="/where/:challenge">
+          <ShowChallenge />
         </Route>
         <Route>
-          <SelectContainer />
+          <SelectChallenge />
         </Route>
       </Switch>
     </Router>
   );
 }
 
-function SelectContainer() {
+function SelectChallenge() {
   return (
     <Content>
       <Title>Wo ist was?</Title>
-      <ul>
+      <TileList>
         {
-          BagStore.getTasks().map(
-            (task, i) => <li key={i}><Link to={"/where/" + task.name}>{task.displayName}</Link></li>
+          ChallengeDefinitions.map(
+            (challenge, i) => <Tile key={i} to={"/where/" + challenge.name} icon="?">{challenge.displayName}</Tile>
           )
         }
-      </ul>
+      </TileList>
     </Content>
   );
-
 }
 
+function ShowChallenge() {
+  const { challenge } = useParams();
+  for (let def of ChallengeDefinitions) {
+    if (def.name === challenge) {
+      return <ChallengeComponent challengeDefinition={def} />
+    }
+  }
+}
 
-function ShowContainer() {
-  const { task } = useParams();
-  const [whereState, setWhereState] = useState(() => BagStore.getStore(task));
+function ChallengeComponent({ challengeDefinition }) {
+  const [challengeState, setChallengeState] = useState(
+    () => ChallengeStore.createFromDefinition(challengeDefinition)
+  );
   const selectItem = (item) => {
-    setWhereState((bagStore) => bagStore.selectItem(item));
+    setChallengeState((challengeStore) => challengeStore.selectItem(item));
   };
   const clearItem = () => {
-    setWhereState((bagStore) => bagStore.clearSelectedItems());
+    setChallengeState((challengeStore) => challengeStore.clearSelectedItems());
   };
 
   return (
-    <WhereDisplay
-      image={whereState.getCurrentImage()}
-      imageWidth={whereState.getCurrentImageWidth()}
-      map={whereState.getCurrentMap()}
-      selected={whereState.getSelectedItems()}
+    <ContainerDisplay
+      image={challengeState.getCurrentImage()}
+      imageWidth={challengeState.getCurrentImageWidth()}
+      map={challengeState.getCurrentMap()}
+      selected={challengeState.getSelectedItems()}
       onSelectItem={selectItem}
       onClearSelectedItems={clearItem}
     />
   );
 }
+ChallengeComponent.propTypes = {
+  challengeDefinition: PropTypes.any
+};
 
-const WhereDisplay = ({
+const ContainerDisplay = ({
   image,
   imageWidth,
   map,
@@ -81,7 +94,7 @@ const WhereDisplay = ({
     </Content>
   );
 };
-WhereDisplay.propTypes = {
+ContainerDisplay.propTypes = {
   image: PropTypes.any,
   imageWidth: PropTypes.any,
   map: PropTypes.any,

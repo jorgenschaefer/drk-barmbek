@@ -3,6 +3,17 @@ const BagDefinitions = [
     name: "streifensatz",
     displayName: "Streifensatz",
     initialContainer: "rucksackUnten",
+    items: {
+      bz: {
+        displayName: "Blutzuckermessgerät",
+      },
+      coolpack: {
+        displayName: "Kältesofortkompresse",
+      },
+      absauge: {
+        displayName: "Absauge",
+      },
+    },
     containers: {
       rucksackUnten: {
         image: "/where/rucksack-unten.png",
