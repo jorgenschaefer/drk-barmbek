@@ -52,6 +52,11 @@ export default class ChallengeStore {
     return count;
   }
 
+  removeSelectedItem(index) {
+    let inventory = this.inventory.filter((_, i) => i !== index);
+    return new ChallengeStore(this.definition, this.currentContainerName, inventory);
+  }
+
   clearSelectedItems() {
     return new ChallengeStore(this.definition, this.currentContainerName, []);
   }

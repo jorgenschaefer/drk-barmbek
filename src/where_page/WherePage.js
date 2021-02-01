@@ -54,7 +54,10 @@ function ChallengeComponent({ challengeDefinition }) {
   const selectItem = (item) => {
     setChallengeState((challengeStore) => challengeStore.selectItem(item));
   };
-  const clearItem = () => {
+  const removeSelectedItem = (i) => {
+    setChallengeState((challengeStore) => challengeStore.removeSelectedItem(i));
+  }
+  const clearInventory = () => {
     setChallengeState((challengeStore) => challengeStore.clearSelectedItems());
   };
 
@@ -65,7 +68,8 @@ function ChallengeComponent({ challengeDefinition }) {
       map={challengeState.getCurrentMap()}
       selected={challengeState.getSelectedItems()}
       onSelectItem={selectItem}
-      onClearSelectedItems={clearItem}
+      onRemoveSelectedItem={removeSelectedItem}
+      onClearInventory={clearInventory}
     />
   );
 }
@@ -79,7 +83,8 @@ const ContainerDisplay = ({
   map,
   selected,
   onSelectItem,
-  onClearSelectedItems,
+  onRemoveSelectedItem,
+  onClearInventory,
 }) => {
   return (
     <Content>
@@ -87,10 +92,14 @@ const ContainerDisplay = ({
       <ImageMapper
         src={image}
         map={map}
-        onClick={(area) => onSelectItem(area.id)}
+        onClick={area => onSelectItem(area.id)}
         imgWidth={imageWidth}
       />
-      <ItemDisplay items={selected} clear={() => onClearSelectedItems()} />
+      <ItemDisplay
+        items={selected}
+        onRemoveSelectedItem={onRemoveSelectedItem}
+        onClearInventory={onClearInventory}
+      />
     </Content>
   );
 };
@@ -99,24 +108,29 @@ ContainerDisplay.propTypes = {
   imageWidth: PropTypes.any,
   map: PropTypes.any,
   selected: PropTypes.any,
-  onSelectItem: PropTypes.any,
-  onClearSelectedItems: PropTypes.any,
+  onSelectItem: PropTypes.func,
+  onRemoveSelectedItem: PropTypes.func,
+  onClearInventory: PropTypes.func,
 };
 
-const ItemDisplay = (props) => {
+const ItemDisplay = ({ items, onRemoveSelectedItem, onClearInventory }) => {
   return (
     <div>
       <Header>Ausgewählt</Header>
       <ul>
-        {props.items.map((item, i) => (
-          <li key={i}>{item}</li>
+        {items.map((item, i) => (
+          <li key={i}>
+            {item}
+            <a onClick={() => onRemoveSelectedItem(i)}> 🗶</a>
+          </li>
         ))}
       </ul>
-      <Button onClick={props.clear}>Löschen</Button>
+      <Button onClick={onClearInventory}>Löschen</Button>
     </div>
   );
 };
 ItemDisplay.propTypes = {
   items: PropTypes.any,
-  clear: PropTypes.func,
+  onRemoveSelectedItem: PropTypes.func,
+  onClearInventory: PropTypes.func,
 };
