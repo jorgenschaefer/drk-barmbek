@@ -66,5 +66,14 @@ export default class ChallengeStore {
       item => this.definition.items[item].displayName
     );
   }
+
+  isInventory(required) {
+    for (let req of required) {
+      if (!this.inventory.includes(req)) {
+        return false;
+      }
+    }
+    return true;
+  }
 }
 

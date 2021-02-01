@@ -30,7 +30,7 @@ function SelectChallenge() {
       <TileList>
         {
           ChallengeDefinitions.map(
-            (challenge, i) => <Tile key={i} to={"/where/" + challenge.name} icon="?">{challenge.displayName}</Tile>
+            (challenge, i) => <Tile key={i} to={"/where/" + challenge.name} icon={challenge.icon}>{challenge.displayName}</Tile>
           )
         }
       </TileList>
@@ -62,55 +62,32 @@ function ChallengeComponent({ challengeDefinition }) {
   };
 
   return (
-    <ContainerDisplay
-      image={challengeState.getCurrentImage()}
-      imageWidth={challengeState.getCurrentImageWidth()}
-      map={challengeState.getCurrentMap()}
-      selected={challengeState.getSelectedItems()}
-      onSelectItem={selectItem}
-      onRemoveSelectedItem={removeSelectedItem}
-      onClearInventory={clearInventory}
-    />
+    <Content>
+      <Title>Wo ist was?</Title>
+      <div style={{display: "flex", flexWrap: "wrap"}}>
+        <ImageMapper
+          src={challengeState.getCurrentImage()}
+          map={challengeState.getCurrentMap()}
+          imgWidth={challengeState.getCurrentImageWidth()}
+          onClick={area => selectItem(area.id)}
+        />
+        <div style={{display: "flex", flexDirection: "column", marginLeft: "1em"}}>
+          <ItemDisplay
+            items={challengeState.getSelectedItems()}
+            onRemoveSelectedItem={removeSelectedItem}
+            onClearInventory={clearInventory}
+          />
+          <TaskDisplay
+            tasks={challengeDefinition.tasks}
+            isInventory={required => challengeState.isInventory(required)}
+          />
+        </div>
+      </div>
+    </Content>
   );
 }
 ChallengeComponent.propTypes = {
   challengeDefinition: PropTypes.any
-};
-
-const ContainerDisplay = ({
-  image,
-  imageWidth,
-  map,
-  selected,
-  onSelectItem,
-  onRemoveSelectedItem,
-  onClearInventory,
-}) => {
-  return (
-    <Content>
-      <Title>Wo ist was?</Title>
-      <ImageMapper
-        src={image}
-        map={map}
-        onClick={area => onSelectItem(area.id)}
-        imgWidth={imageWidth}
-      />
-      <ItemDisplay
-        items={selected}
-        onRemoveSelectedItem={onRemoveSelectedItem}
-        onClearInventory={onClearInventory}
-      />
-    </Content>
-  );
-};
-ContainerDisplay.propTypes = {
-  image: PropTypes.any,
-  imageWidth: PropTypes.any,
-  map: PropTypes.any,
-  selected: PropTypes.any,
-  onSelectItem: PropTypes.func,
-  onRemoveSelectedItem: PropTypes.func,
-  onClearInventory: PropTypes.func,
 };
 
 const ItemDisplay = ({ items, onRemoveSelectedItem, onClearInventory }) => {
@@ -134,3 +111,18 @@ ItemDisplay.propTypes = {
   onRemoveSelectedItem: PropTypes.func,
   onClearInventory: PropTypes.func,
 };
+
+const TaskDisplay = ({ tasks, isInventory }) => {
+  return (
+    <div>
+      <Header>Aufgaben</Header>
+      <ul>
+        { tasks.map((task, i) => <li key={i}>{task.displayName} {isInventory(task.required) ? "✓" : "✗"}</li>) }
+      </ul>
+    </div>
+  )
+};
+TaskDisplay.propTypes = {
+  tasks: PropTypes.any,
+  isInventory: PropTypes.func,
+}
