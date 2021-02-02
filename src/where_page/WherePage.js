@@ -1,87 +1,99 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
 import { BrowserRouter as Router, Switch, Route, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import ImageMapper from "react-img-mapper";
 
 import { Content, Title, Header, Button } from "../DRKStyle";
 import { TileList, Tile } from "../TileStyle";
-import SubjectStore from './SubjectStore';
+import {
+  getAllSubjects,
+  isSubjectName,
+  subjectReducer,
+  initialState,
+  containerImage,
+  containerImageWidth,
+  containerMap,
+  selectArea,
+  inventory,
+  removeItem,
+  clearInventory,
+  getTasks,
+  isTaskComplete,
+} from './subjectState';
 
 export default function WherePage() {
   return (
-    <Router>
-      <Switch>
-        <Route path="/where/:subjectName">
-          <SubjectDetails />
-        </Route>
-        <Route>
-          <SubjectSelection />
-        </Route>
-      </Switch>
-    </Router>
+    <Content>
+      <Title>Wo ist was?</Title>
+      <Router>
+        <Switch>
+          <Route path="/where/:subjectName">
+            <SubjectDetails />
+          </Route>
+          <Route>
+            <SubjectSelection />
+          </Route>
+        </Switch>
+      </Router>
+    </Content>
   );
 }
 
 function SubjectSelection() {
   return (
-    <Content>
-      <Title>Wo ist was?</Title>
-      <TileList>
-        {
-          SubjectStore.getAllSubjects().map(
-            (subject, i) => <Tile key={i} to={"/where/" + subject.name} icon={subject.icon}>{subject.displayName}</Tile>
-          )
-        }
-      </TileList>
-    </Content>
+    <TileList>
+      {
+        getAllSubjects().map(
+          (subject, i) => <Tile key={i} to={"/where/" + subject.name} icon={subject.icon}>{subject.displayName}</Tile>
+        )
+      }
+    </TileList>
   );
 }
 
 function SubjectDetails() {
   const { subjectName } = useParams();
-  const subjectStore = SubjectStore.fromName(subjectName);
-  return <SubjectComponent subjectStore={ subjectStore } />
+  if (isSubjectName(subjectName)) {
+    return <SubjectComponent subjectName={ subjectName } />
+  } else {
+    return <SubjectUnknown subjectName={ subjectName } />
+  }
 }
 
-function SubjectComponent({ subjectStore }) {
-  const [subjectState, setSubjectState] = useState(subjectStore);
-  const selectItem = (item) => {
-    setSubjectState((subjectStore) => subjectStore.selectItem(item));
-  };
-  const removeSelectedItem = (i) => {
-    setSubjectState((subjectStore) => subjectStore.removeSelectedItem(i));
-  }
-  const clearInventory = () => {
-    setSubjectState((subjectStore) => subjectStore.clearSelectedItems());
-  };
+function SubjectUnknown({ subjectName }) {
+  return <p>Unbekanntes Thema {subjectName}.</p>
+}
+SubjectUnknown.propTypes = {
+  subjectName: PropTypes.string,
+}
+
+function SubjectComponent({ subjectName }) {
+  const [state, dispatch] = useReducer(subjectReducer, initialState(subjectName));
 
   return (
-    <Content>
-      <Title>Wo ist was?</Title>
       <div style={{display: "flex", flexWrap: "wrap"}}>
         <ImageMapper
-          src={subjectState.getCurrentImage()}
-          map={subjectState.getCurrentMap()}
-          imgWidth={subjectState.getCurrentImageWidth()}
-          onClick={area => selectItem(area.id)}
+          src={containerImage(state)}
+          imgWidth={containerImageWidth(state)}
+          map={containerMap(state)}
+          onClick={area => dispatch(selectArea(area))}
         />
         <div style={{display: "flex", flexDirection: "column", marginLeft: "1em"}}>
           <ItemDisplay
-            items={subjectState.getSelectedItems()}
-            onRemoveSelectedItem={removeSelectedItem}
-            onClearInventory={clearInventory}
+            items={inventory(state)}
+            onRemoveSelectedItem={idx => dispatch(removeItem(idx))}
+            onClearInventory={() => dispatch(clearInventory())}
           />
           <TaskDisplay
-            tasks={subjectStore.getTasks()}
-            isInventory={required => subjectState.isInventory(required)}
+            tasks={getTasks(state)}
+            isTaskComplete={task => isTaskComplete(state, task)}
           />
         </div>
       </div>
-    </Content>
   );
 }
 SubjectComponent.propTypes = {
-  subjectStore: PropTypes.any
+  subjectName: PropTypes.string,
 };
 
 const ItemDisplay = ({ items, onRemoveSelectedItem, onClearInventory }) => {
@@ -106,17 +118,17 @@ ItemDisplay.propTypes = {
   onClearInventory: PropTypes.func,
 };
 
-const TaskDisplay = ({ tasks, isInventory }) => {
+const TaskDisplay = ({ tasks, isTaskComplete }) => {
   return (
     <div>
       <Header>Aufgaben</Header>
       <ul>
-        { tasks.map((task, i) => <li key={i}>{task.displayName} {isInventory(task.required) ? "✓" : "✗"}</li>) }
+        { tasks.map((task, i) => <li key={i}>{task.displayName} {isTaskComplete(task) ? "✓" : "✗"}</li>) }
       </ul>
     </div>
   )
 };
 TaskDisplay.propTypes = {
   tasks: PropTypes.any,
-  isInventory: PropTypes.func,
+  isTaskComplete: PropTypes.func,
 }
