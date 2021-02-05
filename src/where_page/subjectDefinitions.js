@@ -31,7 +31,6 @@ const subjectDefinitions = [
     containers: {
       rucksackUnten: {
         image: "/where/rucksack-unten.png",
-        imageWidth: 783,
         areas: [
           { id: "bz", shape: "rect", coords: [515, 297, 572, 524] },
           { id: "cutasept", shape: "rect", coords: [610, 480, 640, 580] },
@@ -41,7 +40,6 @@ const subjectDefinitions = [
       },
       rucksackOben: {
         image: "/where/rucksack-oben.png",
-        imageWidth: 639,
         areas: [
           { id: "rucksackUnten", shape: "rect", coords: [0, 701, 639, 801] },
           { id: "absauge", shape: "rect", coords: [60, 60, 348, 380] },

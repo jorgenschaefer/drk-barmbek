@@ -1,7 +1,7 @@
 import React, { useReducer } from "react";
 import { BrowserRouter as Router, Switch, Route, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import ImageMapper from "react-img-mapper";
+import ImageMap from "./ImageMap";
 
 import { Content, Title, Header, Button } from "../DRKStyle";
 import { TileList, Tile } from "../TileStyle";
@@ -11,8 +11,7 @@ import {
   subjectReducer,
   initialState,
   containerImage,
-  containerImageWidth,
-  containerMap,
+  containerAreas,
   selectArea,
   inventory,
   removeItem,
@@ -72,12 +71,13 @@ function SubjectComponent({ subjectName }) {
 
   return (
       <div style={{display: "flex", flexWrap: "wrap"}}>
-        <ImageMapper
-          src={containerImage(state)}
-          imgWidth={containerImageWidth(state)}
-          map={containerMap(state)}
-          onClick={area => dispatch(selectArea(area))}
-        />
+        <div style={{ "max-width": "600px" }}>
+          <ImageMap
+            src={containerImage(state)}
+            map={containerAreas(state)}
+            onClick={area => dispatch(selectArea(area))}
+          />
+        </div>
         <div style={{display: "flex", flexDirection: "column", marginLeft: "1em"}}>
           <ItemDisplay
             items={inventory(state)}

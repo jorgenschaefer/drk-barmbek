@@ -35,11 +35,8 @@ export function containerImageWidth(state) {
   return currentContainer(state).imageWidth;
 }
 
-export function containerMap(state) {
-  return {
-    name: state.containerName,
-    areas: currentContainer(state).areas,
-  };
+export function containerAreas(state) {
+  return currentContainer(state).areas;
 }
 
 // Inventory
