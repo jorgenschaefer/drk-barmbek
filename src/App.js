@@ -49,7 +49,7 @@ export default function App() {
           <Route path="/links">
             <LinkPage />
           </Route>
-          <Route path="/Impressum">
+          <Route path="/impressum">
             <ImpressumPage />
           </Route>
         </Switch>
