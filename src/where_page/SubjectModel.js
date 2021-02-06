@@ -27,10 +27,7 @@ export default class SubjectModel {
   }
 
   getInventory() {
-    return this.inventory.map(itemName => ({
-      id: itemName,
-      displayName: this.subjectDefinition.items[itemName].displayName,
-    }));
+    return this.inventory;
   }
 
   getTasks() {
@@ -40,12 +37,12 @@ export default class SubjectModel {
     }));
   }
 
-  selectArea(area) {
-    if (this.isContainer(area.id)) {
-      this.currentContainerName = area.id;
+  selectArea(item) {
+    if (this.isContainer(item.id)) {
+      this.currentContainerName = item.id;
       this.emit("containerChanged");
-    } else if (this.canAddItemToInventory(area.id)) {
-      this.inventory.push(area.id);
+    } else if (this.canAddItemToInventory(item)) {
+      this.inventory.push(item);
       this.emit("inventoryChanged");
     }
   }
@@ -54,14 +51,14 @@ export default class SubjectModel {
     return areaId in this.subjectDefinition.containers
   }
 
-  canAddItemToInventory(itemName) {
+  canAddItemToInventory(item) {
     let count = 0;
-    for (let item of this.inventory) {
-      if (item === itemName) {
+    for (let invItem of this.inventory) {
+      if (invItem.id === item.id) {
         count++;
       }
     }
-    return count < this.subjectDefinition.items[itemName].maxCount;
+    return count < item.count;
   }
 
   removeItem(idx) {
@@ -97,8 +94,9 @@ export default class SubjectModel {
 }
 
 function isTaskComplete(task, inventory) {
+  const inventoryIds = inventory.map(item => item.id);
   for (let req of task.required) {
-    if (!inventory.includes(req)) {
+    if (!inventoryIds.includes(req)) {
       return false;
     }
   }

@@ -10,39 +10,21 @@ const subjectDefinitions = [
         required: ["bz", "cutasept"],
       }
     ],
-    items: {
-      bz: {
-        displayName: "Blutzuckermessgerät",
-        maxCount: 1,
-      },
-      coolpack: {
-        displayName: "Kältesofortkompresse",
-        maxCount: 3,
-      },
-      absauge: {
-        displayName: "Absauge",
-        maxCount: 1,
-      },
-      cutasept: {
-        displayName: "Cuta-Sept",
-        maxCount: 1,
-      }
-    },
     containers: {
       rucksackUnten: {
         image: "/where/rucksack-unten.png",
         areas: [
-          { id: "bz", shape: "rect", coords: [515, 297, 572, 524] },
-          { id: "cutasept", shape: "rect", coords: [610, 480, 640, 580] },
-          { id: "coolpack", shape: "rect", coords: [107, 392, 236, 717] },
-          { id: "rucksackOben", shape: "rect", coords: [0, 0, 782, 100] },
+          { id: "bz", coords: [515, 297, 572, 524], displayName: "Blutzuckermessgerät", count: 1 },
+          { id: "cutasept", coords: [610, 480, 640, 580], displayName: "Cuta-Sept", count: 1, },
+          { id: "coolpack", coords: [107, 392, 236, 717], displayName: "Kältesofortkompresse", count: 3, },
+          { id: "rucksackOben", coords: [0, 0, 782, 100] },
         ],
       },
       rucksackOben: {
         image: "/where/rucksack-oben.png",
         areas: [
-          { id: "rucksackUnten", shape: "rect", coords: [0, 701, 639, 801] },
-          { id: "absauge", shape: "rect", coords: [60, 60, 348, 380] },
+          { id: "rucksackUnten", coords: [0, 701, 639, 801] },
+          { id: "absauge", coords: [60, 60, 348, 380], displayName: "Absauge", count: 1 },
         ],
       },
     }
