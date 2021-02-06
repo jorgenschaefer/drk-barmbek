@@ -6,10 +6,6 @@ for (let def of subjectDefinitions) {
   subjects[def.name] = def;
 }
 
-function currentSubject(state) {
-  return subjects[state.subjectName];
-}
-
 export function getAllSubjects() {
   return subjectDefinitions;
 }
@@ -18,95 +14,98 @@ export function isSubjectName(name) {
   return name in subjects;
 }
 
-// Containers
-function currentContainer(state) {
-  return currentSubject(state).containers[state.containerName];
-}
+export class Subject {
+  constructor(subjectName) {
+    this.subjectDefinition = subjectDefinitions.find(subject => subject.name === subjectName);
+    this.currentContainerName = this.subjectDefinition.initialContainer;
+    this.inventory = [];
+    this.eventHandler = [];
+  }
 
-function isContainer(state, name) {
-  return name in currentSubject(state).containers;
-}
+  get currentContainer() {
+    return this.subjectDefinition.containers[this.currentContainerName];
+  }
 
-export function containerImage(state) {
-  return currentContainer(state).image;
-}
+  getContainerImage() {
+    return this.currentContainer.image;
+  }
 
-export function containerImageWidth(state) {
-  return currentContainer(state).imageWidth;
-}
+  getContainerAreas() {
+    return this.currentContainer.areas;
+  }
 
-export function containerAreas(state) {
-  return currentContainer(state).areas;
-}
+  getInventory() {
+    return this.inventory.map(itemName => this.subjectDefinition.items[itemName].displayName);
+  }
 
-// Inventory
-export function inventory(state) {
-  const items = currentSubject(state).items;
-  return state.inventory.map(
-    item => items[item].displayName
-  );
-}
+  getTasks() {
+    return this.subjectDefinition.tasks.map(task => ({
+      displayName: task.displayName,
+      isComplete: isTaskComplete(task, this.inventory),
+    }));
+  }
 
-function canAddItemToInventory(state, itemName) {
-  let count = 0;
-  for (let item of state.inventory) {
-    if (item === itemName) {
-      count++;
+  selectArea(area) {
+    if (this.isContainer(area.id)) {
+      this.currentContainerName = area.id;
+      this.dispatchEvent("containerChanged");
+    } else if (this.canAddItemToInventory(area.id)) {
+      this.inventory.push(area.id);
+      this.dispatchEvent("inventoryChanged");
     }
   }
-  return count < currentSubject(state).items[itemName].maxCount;
+
+  isContainer(areaId) {
+    return areaId in this.subjectDefinition.containers
+  }
+
+  canAddItemToInventory(itemName) {
+    let count = 0;
+    for (let item of this.inventory) {
+      if (item === itemName) {
+        count++;
+      }
+    }
+    return count < this.subjectDefinition.items[itemName].maxCount;
+  }
+
+  removeItem(idx) {
+    this.inventory = this.inventory.filter((_, i) => i !== idx);
+    this.dispatchEvent("inventoryChanged");
+  }
+
+  clearInventory() {
+    this.inventory = [];
+    this.dispatchEvent("inventoryChanged");
+  }
+
+  addEventHandler(event, handler) {
+    if (!(event in this.eventHandler)) {
+      this.eventHandler[event] = [];
+    }
+    this.eventHandler[event].push(handler);
+  }
+
+  removeEventHandler(event, handler) {
+    if (event in this.eventHandler) {
+      this.eventHandler[event] = this.eventHandler[event].filter(elt => elt !== handler);
+    }
+  }
+
+  dispatchEvent(event) {
+    if (event in this.eventHandler) {
+      for (let handler of this.eventHandler[event]) {
+        handler();
+      }
+    }
+  }
 }
 
-// Tasks
-export function getTasks(state) {
-  return currentSubject(state).tasks;
-}
-
-export function isTaskComplete(state, task) {
+function isTaskComplete(task, inventory) {
   for (let req of task.required) {
-    if (!state.inventory.includes(req)) {
+    if (!inventory.includes(req)) {
       return false;
     }
   }
   return true;
-}
-
-// State and reducer
-export function initialState(subjectName) {
-  return {
-    subjectName: subjectName,
-    containerName: subjects[subjectName].initialContainer,
-    inventory: [],
-  }
-}
-
-export function subjectReducer(state, action) {
-  switch (action.type) {
-    case "selectArea":
-      if (isContainer(state, action.areaId)) {
-        return { ...state, containerName: action.areaId };
-      } else if (canAddItemToInventory(state, action.areaId)) {
-        return { ...state, inventory: state.inventory.concat(action.areaId) };
-      } else {
-        return state;
-      }
-    case "inventory/removeByIndex":
-      return { ...state, inventory: state.inventory.filter((_, i) => i !== action.index) }
-    case "inventory/clear":
-      return { ...state, inventory: [] }
-    default:
-      return state;
-  }
-}
-
-export function selectArea(area) {
-  return { type: "selectArea", areaId: area.id };
-}
-
-export function removeItem(index) {
-  return { type: "inventory/removeByIndex", index: index };
-}
-
-export function clearInventory() {
-  return { type: "inventory/clear" };
 }

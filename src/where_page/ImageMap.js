@@ -48,7 +48,7 @@ export default function ImageMap({ src, map, onClick }) {
       onMouseMove={ onMouseMove }
       onClick={ onMouseClick }
       onMouseLeave={ onMouseLeave }
-      style={{ width: "100%", "user-select": "none" }}
+      style={{ width: "100%", userSelect: "none" }}
     />
   );
 }

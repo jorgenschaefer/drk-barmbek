@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { BrowserRouter as Router, Switch, Route, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import ImageMap from "./ImageMap";
@@ -8,16 +8,7 @@ import { TileList, Tile } from "../TileStyle";
 import {
   getAllSubjects,
   isSubjectName,
-  subjectReducer,
-  initialState,
-  containerImage,
-  containerAreas,
-  selectArea,
-  inventory,
-  removeItem,
-  clearInventory,
-  getTasks,
-  isTaskComplete,
+  Subject,
 } from './subjectState';
 
 export default function WherePage() {
@@ -67,26 +58,57 @@ SubjectUnknown.propTypes = {
 }
 
 function SubjectComponent({ subjectName }) {
-  const [state, dispatch] = useReducer(subjectReducer, initialState(subjectName));
+  const subject = useMemo(
+    () => new Subject(subjectName),
+    [ subjectName ]
+  );
+
+  const [containerImage, setContainerImage] = useState(() => subject.getContainerImage());
+  const [containerAreas, setContainerAreas] = useState(() => subject.getContainerAreas());
+  useEffect(() => {
+    function containerChanged() {
+      setContainerImage(subject.getContainerImage());
+      setContainerAreas(subject.getContainerAreas());
+    }
+    subject.addEventHandler("containerChanged", containerChanged);
+    return () => subject.removeEventHandler("containerChanged", containerChanged);
+  }, [ subject ])
+
+  const [inventory, setInventory] = useState(() => subject.getInventory());
+  useEffect(() => {
+    function inventoryChanged() {
+      setInventory(subject.getInventory());
+    }
+    subject.addEventHandler("inventoryChanged", inventoryChanged);
+    return () => subject.removeEventHandler("inventoryChanged", inventoryChanged);
+  }, [ subject ])
+
+  const [tasks, setTasks] = useState(() => subject.getTasks());
+  useEffect(() => {
+    function tasksChanged() {
+      setTasks(subject.getTasks());
+    }
+    subject.addEventHandler("inventoryChanged", tasksChanged);
+    return () => subject.removeEventHandler("inventoryChanged", tasksChanged);
+  }, [ subject ]);
 
   return (
       <div style={{display: "flex", flexWrap: "wrap"}}>
-        <div style={{ "max-width": "600px" }}>
+        <div style={{ maxWidth: "600px" }}>
           <ImageMap
-            src={containerImage(state)}
-            map={containerAreas(state)}
-            onClick={area => dispatch(selectArea(area))}
+            src={containerImage}
+            map={containerAreas}
+            onClick={area => subject.selectArea(area)}
           />
         </div>
         <div style={{display: "flex", flexDirection: "column", marginLeft: "1em"}}>
           <ItemDisplay
-            items={inventory(state)}
-            onRemoveSelectedItem={idx => dispatch(removeItem(idx))}
-            onClearInventory={() => dispatch(clearInventory())}
+            items={inventory}
+            onRemoveSelectedItem={idx => subject.removeItem(idx)}
+            onClearInventory={() => subject.clearInventory()}
           />
           <TaskDisplay
-            tasks={getTasks(state)}
-            isTaskComplete={task => isTaskComplete(state, task)}
+            tasks={tasks}
           />
         </div>
       </div>
@@ -118,17 +140,16 @@ ItemDisplay.propTypes = {
   onClearInventory: PropTypes.func,
 };
 
-const TaskDisplay = ({ tasks, isTaskComplete }) => {
+const TaskDisplay = ({ tasks }) => {
   return (
     <div>
       <Header>Aufgaben</Header>
       <ul>
-        { tasks.map((task, i) => <li key={i}>{task.displayName} {isTaskComplete(task) ? "✓" : "✗"}</li>) }
+        { tasks.map((task, i) => <li key={i}>{task.displayName} {task.isComplete ? "✓" : "✗"}</li>) }
       </ul>
     </div>
   )
 };
 TaskDisplay.propTypes = {
   tasks: PropTypes.any,
-  isTaskComplete: PropTypes.func,
 }
