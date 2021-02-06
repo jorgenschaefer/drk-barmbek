@@ -70,8 +70,8 @@ function SubjectComponent({ subjectName }) {
       setContainerImage(subject.getContainerImage());
       setContainerAreas(subject.getContainerAreas());
     }
-    subject.addEventHandler("containerChanged", containerChanged);
-    return () => subject.removeEventHandler("containerChanged", containerChanged);
+    subject.on("containerChanged", containerChanged);
+    return () => subject.off("containerChanged", containerChanged);
   }, [ subject ])
 
   const [inventory, setInventory] = useState(() => subject.getInventory());
@@ -79,8 +79,8 @@ function SubjectComponent({ subjectName }) {
     function inventoryChanged() {
       setInventory(subject.getInventory());
     }
-    subject.addEventHandler("inventoryChanged", inventoryChanged);
-    return () => subject.removeEventHandler("inventoryChanged", inventoryChanged);
+    subject.on("inventoryChanged", inventoryChanged);
+    return () => subject.off("inventoryChanged", inventoryChanged);
   }, [ subject ])
 
   const [tasks, setTasks] = useState(() => subject.getTasks());
@@ -88,8 +88,8 @@ function SubjectComponent({ subjectName }) {
     function tasksChanged() {
       setTasks(subject.getTasks());
     }
-    subject.addEventHandler("inventoryChanged", tasksChanged);
-    return () => subject.removeEventHandler("inventoryChanged", tasksChanged);
+    subject.on("inventoryChanged", tasksChanged);
+    return () => subject.off("inventoryChanged", tasksChanged);
   }, [ subject ]);
 
   return (

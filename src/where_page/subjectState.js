@@ -48,10 +48,10 @@ export class Subject {
   selectArea(area) {
     if (this.isContainer(area.id)) {
       this.currentContainerName = area.id;
-      this.dispatchEvent("containerChanged");
+      this.emit("containerChanged");
     } else if (this.canAddItemToInventory(area.id)) {
       this.inventory.push(area.id);
-      this.dispatchEvent("inventoryChanged");
+      this.emit("inventoryChanged");
     }
   }
 
@@ -71,31 +71,31 @@ export class Subject {
 
   removeItem(idx) {
     this.inventory = this.inventory.filter((_, i) => i !== idx);
-    this.dispatchEvent("inventoryChanged");
+    this.emit("inventoryChanged");
   }
 
   clearInventory() {
     this.inventory = [];
-    this.dispatchEvent("inventoryChanged");
+    this.emit("inventoryChanged");
   }
 
-  addEventHandler(event, handler) {
+  on(event, handler) {
     if (!(event in this.eventHandler)) {
       this.eventHandler[event] = [];
     }
     this.eventHandler[event].push(handler);
   }
 
-  removeEventHandler(event, handler) {
+  off(event, handler) {
     if (event in this.eventHandler) {
       this.eventHandler[event] = this.eventHandler[event].filter(elt => elt !== handler);
     }
   }
 
-  dispatchEvent(event) {
+  emit(event, ...args) {
     if (event in this.eventHandler) {
       for (let handler of this.eventHandler[event]) {
-        handler();
+        handler(...args);
       }
     }
   }
