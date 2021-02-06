@@ -27,11 +27,10 @@ export default class SubjectModel {
   }
 
   getInventory() {
-    return this.inventory;
-  }
-
-  getItemDisplayName(itemName) {
-    return this.subjectDefinition.items[itemName].displayName;
+    return this.inventory.map(itemName => ({
+      id: itemName,
+      displayName: this.subjectDefinition.items[itemName].displayName,
+    }));
   }
 
   getTasks() {

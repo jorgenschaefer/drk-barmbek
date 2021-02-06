@@ -8,44 +8,40 @@ export default function useSubject(subjectName) {
     [ subjectName ]
   );
 
-  const [container, setContainer] = useState(() => subject.getCurrentContainer());
-  useEffect(() => {
-    function containerChanged() {
-      setContainer(subject.getCurrentContainer());
-    }
-    subject.on("containerChanged", containerChanged);
-    return () => subject.off("containerChanged", containerChanged);
-  }, [ subject ])
+  const [state, setState] = useState(getState(subject));
 
-  const [inventory, setInventory] = useState(() => subject.getInventory());
-  useEffect(() => {
-    function inventoryChanged() {
-      setInventory(subject.getInventory().map(itemName => subject.getItemDisplayName(itemName)));
-    }
-    subject.on("inventoryChanged", inventoryChanged);
-    return () => subject.off("inventoryChanged", inventoryChanged);
-  }, [ subject ])
+  function stateChanged() {
+    setState(getState(subject));
+  }
 
-  const [tasks, setTasks] = useState(() => subject.getTasks());
   useEffect(() => {
-    function tasksChanged() {
-      setTasks(subject.getTasks());
+    subject.on("containerChanged", stateChanged);
+    subject.on("inventoryChanged", stateChanged);
+    return () => {
+      subject.off("containerChanged", stateChanged);
+      subject.off("inventoryChanged", stateChanged);
     }
-    subject.on("inventoryChanged", tasksChanged);
-    return () => subject.off("inventoryChanged", tasksChanged);
-  }, [ subject ]);
+  }, [ subject, stateChanged ])
 
-  return [
-    {
-      containerImage: container.image,
-      containerAreas: container.areas,
-      inventory: inventory,
-      tasks: tasks,
-    },
-    {
-      selectArea: (area) => subject.selectArea(area),
-      removeItem: (idx) => subject.removeItem(idx),
-      clearInventory: () => subject.clearInventory(),
-    }
-  ];
+  const dispatch = {
+    selectArea: (area) => subject.selectArea(area),
+    removeItem: (idx) => subject.removeItem(idx),
+    clearInventory: () => subject.clearInventory(),
+  }
+
+  return [state, dispatch];
+}
+
+function getState(subject) {
+  const containerImage = subject.getCurrentContainer().image;
+  const containerAreas = subject.getCurrentContainer().areas;
+  const inventory = subject.getInventory();
+  const tasks = subject.getTasks();
+
+  return {
+    containerImage,
+    containerAreas,
+    inventory,
+    tasks,
+  }
 }

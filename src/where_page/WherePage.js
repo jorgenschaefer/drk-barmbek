@@ -93,7 +93,7 @@ const ItemDisplay = ({ items, onRemoveSelectedItem, onClearInventory }) => {
       <ul>
         {items.map((item, i) => (
           <li key={i}>
-            {item}
+            {item.displayName}
             <a onClick={() => onRemoveSelectedItem(i)}> 🗶</a>
           </li>
         ))}
