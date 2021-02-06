@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React from "react";
 import { BrowserRouter as Router, Switch, Route, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import ImageMap from "./ImageMap";
@@ -8,8 +8,8 @@ import { TileList, Tile } from "../TileStyle";
 import {
   getAllSubjects,
   isSubjectName,
-  Subject,
-} from './subjectState';
+} from './SubjectModel';
+import useSubject from './useSubject';
 
 export default function WherePage() {
   return (
@@ -58,57 +58,25 @@ SubjectUnknown.propTypes = {
 }
 
 function SubjectComponent({ subjectName }) {
-  const subject = useMemo(
-    () => new Subject(subjectName),
-    [ subjectName ]
-  );
-
-  const [containerImage, setContainerImage] = useState(() => subject.getContainerImage());
-  const [containerAreas, setContainerAreas] = useState(() => subject.getContainerAreas());
-  useEffect(() => {
-    function containerChanged() {
-      setContainerImage(subject.getContainerImage());
-      setContainerAreas(subject.getContainerAreas());
-    }
-    subject.on("containerChanged", containerChanged);
-    return () => subject.off("containerChanged", containerChanged);
-  }, [ subject ])
-
-  const [inventory, setInventory] = useState(() => subject.getInventory());
-  useEffect(() => {
-    function inventoryChanged() {
-      setInventory(subject.getInventory());
-    }
-    subject.on("inventoryChanged", inventoryChanged);
-    return () => subject.off("inventoryChanged", inventoryChanged);
-  }, [ subject ])
-
-  const [tasks, setTasks] = useState(() => subject.getTasks());
-  useEffect(() => {
-    function tasksChanged() {
-      setTasks(subject.getTasks());
-    }
-    subject.on("inventoryChanged", tasksChanged);
-    return () => subject.off("inventoryChanged", tasksChanged);
-  }, [ subject ]);
+  const [state, dispatch] = useSubject(subjectName);
 
   return (
       <div style={{display: "flex", flexWrap: "wrap"}}>
         <div style={{ maxWidth: "600px" }}>
           <ImageMap
-            src={containerImage}
-            map={containerAreas}
-            onClick={area => subject.selectArea(area)}
+            src={state.containerImage}
+            map={state.containerAreas}
+            onClick={area => dispatch.selectArea(area)}
           />
         </div>
         <div style={{display: "flex", flexDirection: "column", marginLeft: "1em"}}>
           <ItemDisplay
-            items={inventory}
-            onRemoveSelectedItem={idx => subject.removeItem(idx)}
-            onClearInventory={() => subject.clearInventory()}
+            items={state.inventory}
+            onRemoveSelectedItem={idx => dispatch.removeItem(idx)}
+            onClearInventory={() => dispatch.clearInventory()}
           />
           <TaskDisplay
-            tasks={tasks}
+            tasks={state.tasks}
           />
         </div>
       </div>

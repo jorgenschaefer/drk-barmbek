@@ -14,7 +14,7 @@ export function isSubjectName(name) {
   return name in subjects;
 }
 
-export class Subject {
+export default class SubjectModel {
   constructor(subjectName) {
     this.subjectDefinition = subjectDefinitions.find(subject => subject.name === subjectName);
     this.currentContainerName = this.subjectDefinition.initialContainer;
@@ -22,20 +22,16 @@ export class Subject {
     this.eventHandler = [];
   }
 
-  get currentContainer() {
+  getCurrentContainer() {
     return this.subjectDefinition.containers[this.currentContainerName];
   }
 
-  getContainerImage() {
-    return this.currentContainer.image;
-  }
-
-  getContainerAreas() {
-    return this.currentContainer.areas;
-  }
-
   getInventory() {
-    return this.inventory.map(itemName => this.subjectDefinition.items[itemName].displayName);
+    return this.inventory;
+  }
+
+  getItemDisplayName(itemName) {
+    return this.subjectDefinition.items[itemName].displayName;
   }
 
   getTasks() {
