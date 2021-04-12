@@ -1,5 +1,5 @@
 import React from "react";
-import { Content, Title } from "./DRKStyle";
+import { Content, Title } from "@barmbek/DRKStyle";
 
 export default function AppPage() {
   return (

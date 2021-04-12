@@ -1,5 +1,5 @@
 import React from "react";
-import { Content, Title, ExternalLink, Header } from "./DRKStyle";
+import { Content, Title, ExternalLink, Header } from "@barmbek/DRKStyle";
 
 export default function LinkPage() {
   return (

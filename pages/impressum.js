@@ -1,5 +1,5 @@
 import React from "react";
-import { Content, Title } from "./DRKStyle";
+import { Content, Title } from "@barmbek/DRKStyle";
 
 export default function LinkPage() {
   return (
@@ -15,7 +15,7 @@ export default function LinkPage() {
         22081 Hamburg
         <br />
         <br />
-        E-Mail: schaefer@drk-barmbek-uhlenhorst.de
+        E-Mail: Jorgen.Schaefer@gmail.com
         <br />
         Telefon: 01572 - 876 73 08
       </p>

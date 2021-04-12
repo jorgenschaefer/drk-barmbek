@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Content, Title, ExternalLink } from "./DRKStyle";
-import { TileList, Tile } from "./TileStyle";
+import { Content, Title, ExternalLink } from "@barmbek/DRKStyle";
+import { TileList, Tile } from "@barmbek/TileStyle";
 
 export default function HomePage() {
   return (
