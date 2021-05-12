@@ -25,10 +25,6 @@ export default function HomePage() {
             werden.
           </p>
         </Tile>
-        <Tile to="/map" icon="🌎">
-          <b>Lageplan</b>
-          <p>Eigene Karten mit Koordinaten für Einsätze.</p>
-        </Tile>
         <Tile to="/links" icon="🔗">
           <b>Linksammlung</b>
           <p>Nützliche Links für die Arbeit in der Bereitschaft.</p>
