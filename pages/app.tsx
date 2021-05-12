@@ -1,9 +1,9 @@
 import React from "react";
-import { Content, Title } from "@barmbek/DRKStyle";
+import { Title } from "@barmbek/DRKStyle";
 
 export default function AppPage() {
   return (
-    <Content>
+    <>
       <Title>DRK Alarm App</Title>
 
       <p>
@@ -24,6 +24,6 @@ export default function AppPage() {
           alt="Download App"
         />
       </a>
-    </Content>
+    </>
   );
 }

@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import styled from "styled-components";
 import NextLink from "next/link";
 
@@ -35,13 +34,9 @@ export const HeaderBar = styled.div`
   background: #fff;
   z-index: 10;
   height: 50px;
-
-  @media print {
-    display: none;
-  }
 `;
 
-export const HeaderLogo = ({ to }) => (
+export const HeaderLogo = ({ to }: { to: string }) => (
   <NextLink href={to}>
     <a>
       <img
@@ -52,35 +47,11 @@ export const HeaderLogo = ({ to }) => (
     </a>
   </NextLink>
 );
-HeaderLogo.propTypes = {
-  to: PropTypes.string,
-};
-
-export const HeaderItemLeft = styled.div``;
-
-export const HeaderItemRight = styled.div`
-  margin-right: 15px;
-`;
-
-export const HeaderIntern = styled.div`
-  border: 1px solid ${colors.drkred};
-  color: ${colors.drkred};
-  padding: 0.2em 1em;
-  border-radius: 5px;
-  font-weight: bold;
-  white-space: nowrap;
-`;
 
 export const Content = styled.div`
   max-width: 1160px;
   margin: 60px auto 0 auto;
   padding: 0 20px;
-
-  @media print {
-    margin: 0;
-    padding: 0;
-    max-width: auto;
-  }
 `;
 
 export const Title = styled.h1`
@@ -107,7 +78,7 @@ export const Subheader = styled.h3`
   margin: 0.5em 0;
 `;
 
-export const Link = ({ to, children }) => (
+export const Link: React.FC<{ to: string }> = ({ to, children }) => (
   <NextLink href={to}>
     <ExternalLink>
       {children}
@@ -138,10 +109,6 @@ export const Footer = styled.div`
   padding-top: 1em;
   margin: 2em;
   font-size: 75%;
-
-  @media print {
-    display: none;
-  }
 `;
 
 export const SmallScreen = styled.div`

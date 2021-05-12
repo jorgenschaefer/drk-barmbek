@@ -1,9 +1,9 @@
 import React from "react";
-import { Content, Title } from "@barmbek/DRKStyle";
+import { Title } from "@barmbek/DRKStyle";
 
-export default function LinkPage() {
+export default function ImpressumPage() {
   return (
-    <Content>
+    <>
       <Title>Impressum</Title>
       <p>Ansprechpartner für diese Webseite ist:</p>
 
@@ -19,6 +19,6 @@ export default function LinkPage() {
         <br />
         Telefon: 01572 - 876 73 08
       </p>
-    </Content>
+    </>
   );
 }
